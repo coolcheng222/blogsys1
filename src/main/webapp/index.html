@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base>
+        <script>
+            let name = window.location.pathname;
+            var index = name.substr(1).indexOf("/");
+            var result = name.substr(0, index + 1);
+            $("base").prop("href", window.location.protocol + "://" + window.location.host + ":"
+                + window.location.port + result + "/");
+        </script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>aaa</h1>
+    <a href="handle">handle</a>
+</body>
+</html>
