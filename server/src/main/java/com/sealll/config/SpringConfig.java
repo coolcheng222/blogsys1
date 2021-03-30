@@ -5,6 +5,11 @@ import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.sealll.config.yml.YmlPropertySourceFactory;
 import jdk.tools.jlink.internal.Platform;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
@@ -35,8 +40,8 @@ import java.util.stream.Stream;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(value = "com.sealll",excludeFilters = {
-        @ComponentScan.Filter(type=FilterType.ANNOTATION,classes ={ Configuration.class}),
-        @ComponentScan.Filter(type= FilterType.ANNOTATION,classes={Controller.class}),
+//        @ComponentScan.Filter(type=FilterType.ANNOTATION,classes ={ Configuration.class}),
+        @ComponentScan.Filter(type= FilterType.ANNOTATION,classes={Controller.class})
 })
 public class SpringConfig {
 
@@ -96,6 +101,21 @@ public class SpringConfig {
             MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
             mapperScannerConfigurer.setBasePackage("com.sealll.mapper");
             return mapperScannerConfigurer;
+        }
+    }
+
+    @Configuration
+    static class ShiroConfig{
+        @Bean
+        public SecurityManager securityManager(){
+            DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
+            manager.setSessionManager(sessionManager());
+            return manager;
+        }
+        @Bean
+        public SessionManager sessionManager(){
+            ServletContainerSessionManager manager = new ServletContainerSessionManager();
+            return manager;
         }
     }
 

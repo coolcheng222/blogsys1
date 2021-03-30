@@ -65,7 +65,7 @@
     <logger name="com.sealll" level="debug" />
     <!-- Spring framework logger -->
     <logger name="org.springframework" level="debug" additivity="false"></logger>
-
+<!--    <logger name="org.apache.shiro" level="trace"></logger>-->
 
 
     <!--

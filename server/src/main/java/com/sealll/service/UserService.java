@@ -14,5 +14,8 @@ public interface UserService {
     //修改用户
     public void updateUser(User user);
 
+    //查询用户
+    public User getByUsername(User user);
+
     //
 }
