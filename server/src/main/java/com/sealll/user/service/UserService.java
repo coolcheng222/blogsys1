@@ -1,7 +1,6 @@
-package com.sealll.service;
+package com.sealll.user.service;
 
-import com.sealll.bean.User;
-import org.springframework.stereotype.Service;
+import com.sealll.user.bean.User;
 
 /**
  * @author sealll

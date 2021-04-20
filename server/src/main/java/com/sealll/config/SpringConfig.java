@@ -1,12 +1,13 @@
 package com.sealll.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sealll.config.yml.YmlPropertySourceFactory;
-import jdk.tools.jlink.internal.Platform;
-import org.apache.ibatis.session.SqlSessionFactory;
+import com.sealll.shiro.realm.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -25,11 +25,10 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import sun.security.krb5.Config;
 
 import javax.sql.DataSource;
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -63,8 +62,8 @@ public class SpringConfig {
 
         @Bean
         public DataSource dataSource(){
-            System.out.println(url);
-            System.out.println(username);
+//            System.out.println(url);
+//            System.out.println(username);
             DruidDataSource druidDataSource = new DruidDataSource();
             druidDataSource.setUrl(url);
             druidDataSource.setUsername(username);
@@ -99,7 +98,7 @@ public class SpringConfig {
         @Bean
         public MapperScannerConfigurer mapperScannerConfigurer(){
             MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-            mapperScannerConfigurer.setBasePackage("com.sealll.mapper");
+            mapperScannerConfigurer.setBasePackage("com.sealll");
             return mapperScannerConfigurer;
         }
     }
@@ -107,21 +106,47 @@ public class SpringConfig {
     @Configuration
     static class ShiroConfig{
         @Bean
+        public ShiroFilterFactoryBean shiroFilter(){
+            ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
+            factoryBean.setSecurityManager(securityManager());
+            factoryBean.setLoginUrl("/login");
+            HashMap<String,String> map = new HashMap<>();
+            map.put("/logout","logout");
+            map.put("/login","authc");
+            map.put("/register","anon");
+            map.put("/**","anon");
+            factoryBean.setFilterChainDefinitionMap(map);
+//            factoryBean.setUnauthorizedUrl("/");
+            return factoryBean;
+//            factoryBean.setSuccessUrl("/");
+
+        }
+        @Bean
         public SecurityManager securityManager(){
             DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
             manager.setSessionManager(sessionManager());
+            manager.setRealm(realm());
             return manager;
         }
         @Bean
         public SessionManager sessionManager(){
-            ServletContainerSessionManager manager = new ServletContainerSessionManager();
+            DefaultWebSessionManager manager = new DefaultWebSessionManager();
             return manager;
+        }
+        @Bean
+        public Realm realm(){
+            return new UserRealm();
         }
     }
 
     @Bean
     public Logger log(){
         return LoggerFactory.getLogger("com.sealll");
+    }
+
+    @Bean
+    public ObjectMapper mapper(){
+        return new ObjectMapper();
     }
 
     @DependsOn("dataSource")

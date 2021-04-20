@@ -1,10 +1,10 @@
-package com.sealll.service.impl;
+package com.sealll.user.service.impl;
 
-import com.sealll.bean.User;
-import com.sealll.bean.UserExample;
-import com.sealll.mapper.UserMapper;
-import com.sealll.service.UserService;
-import org.apache.shiro.crypto.hash.Md5Hash;
+import com.sealll.shiro.md5.PasswordParser;
+import com.sealll.user.bean.User;
+import com.sealll.user.bean.UserExample;
+import com.sealll.user.mapper.UserMapper;
+import com.sealll.user.service.UserService;
 import org.apache.shiro.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +21,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper mapper;
+    @Autowired
+    private PasswordParser passwordParser;
     @Override
     public void addUser(User user) {
         Assert.notNull(user.getUsername());
         Assert.notNull(user.getPassword());
-        String s = transPassword(user);
+        String s = passwordParser.transPassword(user);
         user.setPassword(s);
         mapper.insertSelective(user);
     }
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
         if(user.getUid() == null){
             throw new NullPointerException("uid");
         }
-        String s = transPassword(user);
+        String s = passwordParser.transPassword(user);
         user.setPassword(s);
         mapper.updateByPrimaryKeySelective(user);
     }
@@ -54,15 +56,5 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private String transPassword(User user){
-        String password = user.getPassword();
-        if(password != null){
-            String username = user.getUsername();
-            String s = new Md5Hash(password, username).toString();
-            return s;
-        }else{
-            return null;
-        }
 
-    }
 }

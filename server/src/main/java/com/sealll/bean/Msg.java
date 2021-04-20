@@ -15,29 +15,39 @@ public class Msg {
     public static Msg success(String message){
         Msg msg = new Msg();
         msg.setErrno(0);
-        msg.setMessage(message);
+        msg.message(message);
         return msg;
     }
     public static Msg fail(String message){
         Msg msg = new Msg();
         msg.setErrno(1);
-        msg.setMessage(message);
+        msg.message(message);
         return msg;
     }
     public static Msg redirect(String url){
         Msg msg = new Msg();
         msg.setErrno(2);
-        msg.setMessage(url);
+        msg.message(url);
         return msg;
+    }
+    public Msg message(String message) {
+        this.message = message;
+        return this;
+    }
+    public Msg extend(Object extend) {
+        this.extend = extend;
+        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
+
     public void setMessage(String message) {
         this.message = message;
     }
+
 
     public Integer getErrno() {
         return errno;
@@ -47,6 +57,7 @@ public class Msg {
         this.errno = errno;
     }
 
+
     public Object getExtend() {
         return extend;
     }
@@ -54,6 +65,7 @@ public class Msg {
     public void setExtend(Object extend) {
         this.extend = extend;
     }
+
 
     @Override
     public String toString() {
