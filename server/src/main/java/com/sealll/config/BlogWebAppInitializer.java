@@ -1,6 +1,7 @@
 package com.sealll.config;
 
 import com.google.code.kaptcha.servlet.KaptchaServlet;
+import com.sealll.user.interceptor.KapFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
@@ -42,6 +43,9 @@ public class BlogWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
         FilterRegistration.Dynamic hidden = servletContext.addFilter("hidden", HiddenHttpMethodFilter.class);
         hidden.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
+        //验证码过滤器
+        FilterRegistration.Dynamic kaptFilter = servletContext.addFilter("kaptFilter", KapFilter.class);
+        kaptFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/login","/register");
 
         //shiro拦截系统
         FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilter", DelegatingFilterProxy.class);

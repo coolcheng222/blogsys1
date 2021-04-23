@@ -11,38 +11,42 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author sealll
  * @time 2021/4/20 10:27
  */
-public class KapInterceptor implements HandlerInterceptor {
-    private ObjectMapper mapper = new ObjectMapper();
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+public class KapFilter implements Filter {
 
-        if(!"POST".equals(request.getMethod())){
-            return true;
+    private ObjectMapper mapper = new ObjectMapper();
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if(!"POST".equals(((HttpServletRequest)request).getMethod())){
+//            return true;
+            chain.doFilter(request,response);
         }
         String parameter = request.getParameter(ParameterConstants.KAPTCHAPARAM);
-        String inner = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        String inner = (String)((HttpServletRequest)request).getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
         if(parameter == null || !parameter.equals(inner)){
             response.getWriter().write(mapper.writeValueAsString(Msg.fail("keptcha error")));
             SecurityUtils.getSubject().logout();
-            return false;
+            return;
         }
-        return true;
+        chain.doFilter(request,response);
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void destroy() {
 
     }
 }
