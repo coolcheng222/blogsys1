@@ -2,7 +2,12 @@ package com.sealll.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.code.kaptcha.Producer;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.servlet.KaptchaServlet;
+import com.google.code.kaptcha.util.Config;
 import com.sealll.config.yml.YmlPropertySourceFactory;
+import com.sealll.constant.FileConstants;
 import com.sealll.shiro.realm.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -26,10 +31,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 /**
@@ -103,6 +114,9 @@ public class SpringConfig {
         }
     }
 
+    /**
+     *
+     */
     @Configuration
     static class ShiroConfig{
         @Bean
@@ -153,6 +167,21 @@ public class SpringConfig {
     @Bean
     public PlatformTransactionManager transactionManager(DataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Configuration
+    static class KaptConfig{
+        @Bean
+        public Producer producer() throws IOException {
+            DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+            Properties pros = new Properties();
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream(FileConstants.KAPTCHA);
+            pros.load(is);
+            Config config = new Config(pros);
+            defaultKaptcha.setConfig(config);
+            return defaultKaptcha;
+        }
+
     }
 
 

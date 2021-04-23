@@ -1,14 +1,12 @@
 package com.sealll.config;
 
+import com.google.code.kaptcha.servlet.KaptchaServlet;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import java.util.EnumSet;
 
 /**
@@ -34,19 +32,23 @@ public class BlogWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-//        System.out.println("啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊");
         //字符编码过滤器
         FilterRegistration.Dynamic charencod = servletContext.addFilter("character", CharacterEncodingFilter.class);
         charencod.setInitParameter("encoding","utf-8");
         charencod.setInitParameter("forceEncoding","true");
         charencod.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
+        //请求伪装过滤器
         FilterRegistration.Dynamic hidden = servletContext.addFilter("hidden", HiddenHttpMethodFilter.class);
         hidden.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
 
+        //shiro拦截系统
         FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilter", DelegatingFilterProxy.class);
         shiroFilter.addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
+//        验证码
+//        ServletRegistration.Dynamic kaptchaServlet = servletContext.addServlet("kaptchaServlet", KaptchaServlet.class);
+//        kaptchaServlet.addMapping("/kapt");
     }
 }
