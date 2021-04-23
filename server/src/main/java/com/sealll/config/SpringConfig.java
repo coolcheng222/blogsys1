@@ -9,6 +9,7 @@ import com.google.code.kaptcha.util.Config;
 import com.sealll.config.yml.YmlPropertySourceFactory;
 import com.sealll.constant.FileConstants;
 import com.sealll.shiro.realm.UserRealm;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -16,6 +17,10 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
+import org.crazycake.shiro.RedisCache;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
@@ -118,7 +123,14 @@ public class SpringConfig {
      *
      */
     @Configuration
+    @PropertySource(value="classpath:jdbc.yml",factory = YmlPropertySourceFactory.class)
     static class ShiroConfig{
+        @Value("${redis.host}")
+        private String host;
+        @Value("${redis.password}")
+        private String password;
+        @Value("${redis.database}")
+        private Integer database;
         @Bean
         public ShiroFilterFactoryBean shiroFilter(){
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
@@ -140,16 +152,42 @@ public class SpringConfig {
             DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
             manager.setSessionManager(sessionManager());
             manager.setRealm(realm());
+            SecurityUtils.setSecurityManager(manager);
             return manager;
         }
         @Bean
         public SessionManager sessionManager(){
             DefaultWebSessionManager manager = new DefaultWebSessionManager();
+            manager.setSessionDAO(redisSessionDAO());
+            manager.setCacheManager(redisCacheManager());
             return manager;
         }
         @Bean
         public Realm realm(){
-            return new UserRealm();
+            UserRealm userRealm = new UserRealm();
+            userRealm.setAuthenticationCachingEnabled(true);
+            userRealm.setAuthorizationCachingEnabled(true);
+            return userRealm;
+        }
+        @Bean
+        public RedisManager redisManager(){
+            RedisManager redisManager = new RedisManager();
+            redisManager.setPassword(password);
+            redisManager.setHost(host);
+            redisManager.setDatabase(database);
+            return redisManager;
+        }
+        @Bean
+        public RedisCacheManager redisCacheManager(){
+            RedisCacheManager redisCacheManager = new RedisCacheManager();
+            redisCacheManager.setRedisManager(redisManager());
+            return redisCacheManager;
+        }
+        @Bean
+        public RedisSessionDAO redisSessionDAO(){
+            RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+            redisSessionDAO.setRedisManager(redisManager());
+            return redisSessionDAO;
         }
     }
 
