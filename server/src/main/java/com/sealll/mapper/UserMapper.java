@@ -1,4 +1,4 @@
-package com.sealll.user.mapper;
+package com.sealll.mapper;
 
 import com.sealll.user.bean.User;
 import com.sealll.user.bean.UserExample;

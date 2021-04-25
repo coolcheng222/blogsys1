@@ -6,4 +6,6 @@ package com.sealll.constant;
  */
 public class ParameterConstants {
     public static final String KAPTCHAPARAM = "kaptcha";
+    public static final String JEDIS = "jedis";
+    public static final String PIPELINE = "pipeline";
 }

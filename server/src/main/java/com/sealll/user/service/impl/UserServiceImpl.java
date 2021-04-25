@@ -3,7 +3,7 @@ package com.sealll.user.service.impl;
 import com.sealll.shiro.md5.PasswordParser;
 import com.sealll.user.bean.User;
 import com.sealll.user.bean.UserExample;
-import com.sealll.user.mapper.UserMapper;
+import com.sealll.mapper.UserMapper;
 import com.sealll.user.service.UserService;
 import org.apache.shiro.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         UserExample.Criteria criteria = example.createCriteria();
         criteria.andUsernameEqualTo(user.getUsername());
         List<User> users = mapper.selectByExample(example);
-        if(users != null){
+        if(users != null && users.size() >= 1){
             User user1 = users.get(0);
             return user1;
         }else{

@@ -6,9 +6,15 @@ import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.servlet.KaptchaServlet;
 import com.google.code.kaptcha.util.Config;
+import com.sealll.config.yml.DataSourceConfig;
+import com.sealll.config.yml.RedisConfig;
 import com.sealll.config.yml.YmlPropertySourceFactory;
 import com.sealll.constant.FileConstants;
+import com.sealll.shiro.filter.AnnoFilter2;
+import com.sealll.shiro.filter.AuthenticationFilter2;
+import com.sealll.shiro.filter.KaptFilter;
 import com.sealll.shiro.realm.UserRealm;
+import com.sealll.shiro.redis.PipelineRedisManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -25,8 +31,14 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.support.AbstractBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.*;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -35,17 +47,16 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StringValueResolver;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -58,19 +69,33 @@ import java.util.stream.Stream;
 //        @ComponentScan.Filter(type=FilterType.ANNOTATION,classes ={ Configuration.class}),
         @ComponentScan.Filter(type= FilterType.ANNOTATION,classes={Controller.class})
 })
+@PropertySource(value="classpath:jdbc.yml",factory = YmlPropertySourceFactory.class)
 public class SpringConfig {
+    @Autowired
+    private Environment environment;
+    @Bean
+    public RedisConfig redisConfig(){
+//        System.out.println(environment.getProperty("redis.host"));
+        RedisConfig redisConfig = new RedisConfig();
+        redisConfig.setDatabase(Integer.parseInt(environment.getProperty("redis.database")));
+        redisConfig.setHost(environment.getProperty("redis.host"));
+        redisConfig.setPassword(environment.getProperty("redis.password"));
+        return redisConfig;
+    }
+    @Bean
+    public DataSourceConfig dataSourceConfig(){
+        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        dataSourceConfig.setDriverClass(environment.getProperty("datasource.driverClass"));
+        dataSourceConfig.setUrl(environment.getProperty("datasource.url"));
+        dataSourceConfig.setPassword(environment.getProperty("datasource.password"));
+        dataSourceConfig.setUsername(environment.getProperty("datasource.username"));
+        return dataSourceConfig;
+    }
 
     @Configuration
-    @PropertySource(value="classpath:jdbc.yml",factory = YmlPropertySourceFactory.class)
     static class JDBCDatasource{
-        @Value("${datasource.url}")
-        private String url;
-        @Value("${datasource.username}")
-        private String username;
-        @Value("${datasource.driverClass}")
-        private String driverClass;
-        @Value("${datasource.password}")
-        private String password;
+        @Autowired
+        private DataSourceConfig dataSourceConfig;
 
         public JDBCDatasource(){
 
@@ -78,13 +103,11 @@ public class SpringConfig {
 
         @Bean
         public DataSource dataSource(){
-//            System.out.println(url);
-//            System.out.println(username);
             DruidDataSource druidDataSource = new DruidDataSource();
-            druidDataSource.setUrl(url);
-            druidDataSource.setUsername(username);
-            druidDataSource.setDriverClassName(driverClass);
-            druidDataSource.setPassword(password);
+            druidDataSource.setUrl(dataSourceConfig.getUrl());
+            druidDataSource.setUsername(dataSourceConfig.getUsername());
+            druidDataSource.setDriverClassName(dataSourceConfig.getDriverClass());
+            druidDataSource.setPassword(dataSourceConfig.getPassword());
             return druidDataSource;
         }
     }
@@ -114,7 +137,7 @@ public class SpringConfig {
         @Bean
         public MapperScannerConfigurer mapperScannerConfigurer(){
             MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-            mapperScannerConfigurer.setBasePackage("com.sealll");
+            mapperScannerConfigurer.setBasePackage("com.sealll.mapper");
             return mapperScannerConfigurer;
         }
     }
@@ -123,23 +146,25 @@ public class SpringConfig {
      *
      */
     @Configuration
-    @PropertySource(value="classpath:jdbc.yml",factory = YmlPropertySourceFactory.class)
     static class ShiroConfig{
-        @Value("${redis.host}")
-        private String host;
-        @Value("${redis.password}")
-        private String password;
-        @Value("${redis.database}")
-        private Integer database;
+        @Autowired
+        private RedisConfig redisConfig;
+
+        @DependsOn({"kaptFilter","annoFilter2","authenticationFilter2"})
         @Bean
-        public ShiroFilterFactoryBean shiroFilter(){
+        public ShiroFilterFactoryBean shiroFilter(KaptFilter kaptFilter, AnnoFilter2 annoFilter2,AuthenticationFilter2 authenticationFilter2){
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
+            Map<String, Filter> filters = new HashMap<>();
+            filters.put("authc2",authenticationFilter2);
+            filters.put("kapt",kaptFilter);
+            filters.put("anno2",annoFilter2);
+            factoryBean.setFilters(filters);
             factoryBean.setSecurityManager(securityManager());
             factoryBean.setLoginUrl("/login");
             HashMap<String,String> map = new HashMap<>();
             map.put("/logout","logout");
-            map.put("/login","authc");
-            map.put("/register","anon");
+            map.put("/login","anno2,kapt,authc2");
+            map.put("/register","anno2,kapt,anon");
             map.put("/**","anon");
             factoryBean.setFilterChainDefinitionMap(map);
 //            factoryBean.setUnauthorizedUrl("/");
@@ -158,7 +183,7 @@ public class SpringConfig {
         @Bean
         public SessionManager sessionManager(){
             DefaultWebSessionManager manager = new DefaultWebSessionManager();
-            manager.setSessionDAO(redisSessionDAO());
+//            manager.setSessionDAO(redisSessionDAO());
             manager.setCacheManager(redisCacheManager());
             return manager;
         }
@@ -172,9 +197,10 @@ public class SpringConfig {
         @Bean
         public RedisManager redisManager(){
             RedisManager redisManager = new RedisManager();
-            redisManager.setPassword(password);
-            redisManager.setHost(host);
-            redisManager.setDatabase(database);
+            redisManager.setPassword(redisConfig.getPassword());
+            redisManager.setHost(redisConfig.getHost());
+
+//            System.out.println(redisConfig);
             return redisManager;
         }
         @Bean
@@ -183,12 +209,13 @@ public class SpringConfig {
             redisCacheManager.setRedisManager(redisManager());
             return redisCacheManager;
         }
-        @Bean
-        public RedisSessionDAO redisSessionDAO(){
-            RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
-            redisSessionDAO.setRedisManager(redisManager());
-            return redisSessionDAO;
-        }
+//        @Bean
+//        public RedisSessionDAO redisSessionDAO(){
+//            RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+//            redisSessionDAO.setRedisManager(redisManager());
+//            return redisSessionDAO;
+//        }
+
     }
 
     @Bean

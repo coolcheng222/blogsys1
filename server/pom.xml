@@ -159,6 +159,17 @@
             <artifactId>shiro-redis</artifactId>
             <version>3.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>9.0.35</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+            <version>1.69.0</version>
+        </dependency>
 
 
     </dependencies>

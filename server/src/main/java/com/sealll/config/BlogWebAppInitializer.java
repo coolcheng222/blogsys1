@@ -1,7 +1,7 @@
 package com.sealll.config;
 
-import com.google.code.kaptcha.servlet.KaptchaServlet;
-import com.sealll.user.interceptor.KapFilter;
+import com.sealll.shiro.filter.JedisCloserFilter;
+import com.sealll.user.interceptor.CorsFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
@@ -39,17 +39,25 @@ public class BlogWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
         charencod.setInitParameter("forceEncoding","true");
         charencod.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
+
+        //jedis关闭过滤器
+        FilterRegistration.Dynamic jedis = servletContext.addFilter("jedis", JedisCloserFilter.class);
+        jedis.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
+
         //请求伪装过滤器
         FilterRegistration.Dynamic hidden = servletContext.addFilter("hidden", HiddenHttpMethodFilter.class);
         hidden.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
-        //验证码过滤器
-        FilterRegistration.Dynamic kaptFilter = servletContext.addFilter("kaptFilter", KapFilter.class);
-        kaptFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/login","/register");
-
+//        验证码过滤器
+//        FilterRegistration.Dynamic kaptFilter = servletContext.addFilter("kaptFilter", KapFilter.class);
+//        kaptFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/login","/register");
         //shiro拦截系统
-        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilter", DelegatingFilterProxy.class);
-        shiroFilter.addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST),true,"/*");
+        FilterRegistration.Dynamic shiroFilter = servletContext.addFilter("shiroFilter", new DelegatingFilterProxy());
+        shiroFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
+
+        //跨域Filter
+        FilterRegistration.Dynamic corsFilter = servletContext.addFilter("CorsFilter", CorsFilter.class);
+        corsFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
 //        验证码
 //        ServletRegistration.Dynamic kaptchaServlet = servletContext.addServlet("kaptchaServlet", KaptchaServlet.class);

@@ -13,4 +13,5 @@ if(window.location.port == 8080){
 }
 axios.defaults.crossDomain=true;
 axios.defaults.baseURL = path;
+axios.defaults.withCredentials = true;
 export default axios;

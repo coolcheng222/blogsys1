@@ -37,7 +37,7 @@ public class UserController {
         Object failure = request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 
         if (failure == null) {
-            return Msg.redirect(Router.INDEX).message("login success");
+            return Msg.redirect(Router.INDEX);
         }else{
             return Msg.fail("login fail, username or password error");
         }

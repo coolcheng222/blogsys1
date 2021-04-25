@@ -14,6 +14,7 @@ module.exports = {
         hotOnly: false, //是否开启热更新
         proxy: {
             '/api': {
+                // target: 'http://localhost:8080/server_war', //API服务器的地址
                 target: 'http://localhost:8080/blogserver', //API服务器的地址
                 ws: true,  //代理websockets
                 changeOrigin: true, // 虚拟的站点需要更管origin

@@ -33,6 +33,7 @@
     import kaptcha from "./kaptcha";
     // import axios from "axios";
     import axios from '@/global/axiosConfig.js';
+    import qs from 'qs';
     export default {
         name: "Login",
         components:{
@@ -53,8 +54,11 @@
                 axios({
                     url: 'login',
                     method: "POST",
-                    data: {
+                    data: qs.stringify({
                         username,password,kaptcha
+                    }),
+                    header:{
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(data=>{
                     console.log(data);
