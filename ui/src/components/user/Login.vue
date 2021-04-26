@@ -4,17 +4,17 @@
             <el-form @submit.prevent label-position="left" label-width="70px">
                 <el-form-item label="用户名">
                     <el-col :span="20">
-                        <el-input v-model="username" placeholder="用户名/会员名" clearable></el-input>
+                        <el-input v-model="user.username" placeholder="用户名/会员名" clearable></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="密码">
                     <el-col :span="20">
-                        <el-input v-model="password" type="password" placeholder="密码"></el-input>
+                        <el-input v-model="user.password" type="password" placeholder="密码"></el-input>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="验证码">
                     <el-col :span="10">
-                        <el-input v-model="kaptcha" placeholder="验证码"></el-input>
+                        <el-input v-model="user.kaptcha" placeholder="验证码"></el-input>
                     </el-col>
                     <el-col :span="9">
 
@@ -24,6 +24,7 @@
                 <el-form-item>
                     <el-button type="primary" @click="login">登录</el-button>
                 </el-form-item>
+                <router-link to="/user/register">去注册</router-link>
             </el-form>
         </div>
     </div>
@@ -34,6 +35,7 @@
     // import axios from "axios";
     import axios from '@/global/axiosConfig.js';
     import qs from 'qs';
+    import {User} from "../../global/clazz";
     export default {
         name: "Login",
         components:{
@@ -44,13 +46,11 @@
         },
         data() {
             return {
-                username: '',
-                password: '',
-                kaptcha: '',
+                user: new User()
             }
         },methods: {
             login(){
-                var {username,password,kaptcha} = this;
+                var {username,password,kaptcha} = this.user;
                 axios({
                     url: 'login',
                     method: "POST",
@@ -75,10 +75,7 @@
         margin-top: 70px;
         height: 70%;
         background-color: #E9E9F2;
-        border-top: red 2px solid;
-        border-bottom: 1px #D9D9D9 solid;
-        border-right: 1px #D9D9D9 solid;
-        border-left: 1px #D9D9D9 solid;
+        /*border-top: red 2px solid;*/
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
         /*border: 1px black solid;*/
     }

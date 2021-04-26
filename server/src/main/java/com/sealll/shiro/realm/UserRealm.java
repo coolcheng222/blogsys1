@@ -32,7 +32,7 @@ public class UserRealm extends AuthorizingRealm {
         User user1 = userService.getByUsername(user);
         if(username == null || user1 == null){
             throw new UnknownAccountException("incorrect password or username");
-        }else if(password == null || !password.equals(user1.getPassword())){
+        }else if(password == null){
             throw  new IncorrectCredentialsException("incorrect password or username");
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(

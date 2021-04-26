@@ -2,15 +2,15 @@
     <el-container :style="{backgroundImage: `url('${img}'`}">
         <UserHeader :theme="theme"></UserHeader>
         <el-row type="flex" justify="space-between">
-            <el-col :span="9">
+            <el-col :span="layOut[0]">
                 <div :class="theme" class="pic">
 
                 </div>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="layOut[1]">
                 <router-view></router-view>
             </el-col>
-            <el-col :span="8"></el-col>
+            <el-col :span="layOut[2]"></el-col>
         </el-row>
         <el-footer></el-footer>
     </el-container>
@@ -26,6 +26,7 @@
         }, data() {
             return {
                 theme: "Login",
+
             }
         },
         mounted() {
@@ -38,6 +39,22 @@
         computed:{
             img(){
                 return require('@/assets/' + this.theme + '.jpg' );
+            },
+            layOut(){
+                if(this.theme === "Login"){
+                    return [9,7,8];
+                }else if(this.theme === "Register"){
+                    return [14,8,2];
+                }
+                return [];
+            }
+        },
+        beforeRouteUpdate(to){
+            console.log(to);
+            if (to.fullPath.match("login")) {
+                this.theme = "Login";
+            } else if (to.fullPath.match("register")) {
+                this.theme = "Register";
             }
         }
     }
@@ -57,6 +74,9 @@
     }
     .Login{
 
+    }
+    .el-footer{
+        height: 10px;
     }
 
 </style>

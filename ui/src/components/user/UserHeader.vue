@@ -1,7 +1,7 @@
 <template>
     <el-header>
         <el-row type="flex">
-            <el-col :span="2"><router-link to="index" :class="'aaa'"><img style="height: 60px" src="@/assets/logo.png"></router-link></el-col>
+            <el-col :span="2"><router-link to="/index" :class="'aaa'"><img style="height: 60px" src="@/assets/logo2.png"></router-link></el-col>
             <el-col :span="3" class="signal">用户{{msg}}</el-col>
         </el-row>
     </el-header>
@@ -15,7 +15,7 @@
         },
         data(){
             return {
-                logo: 'todo2.png',
+                logo: 'todo2.jpg',
             }
         },
         computed:{

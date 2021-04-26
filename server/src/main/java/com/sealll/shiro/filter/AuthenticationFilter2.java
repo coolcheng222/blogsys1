@@ -1,5 +1,7 @@
 package com.sealll.shiro.filter;
 
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.filter.authc.AuthenticationFilter;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -31,5 +33,10 @@ public class AuthenticationFilter2 extends FormAuthenticationFilter {
         HttpServletRequest req = (HttpServletRequest)request;
         boolean b = pathsMatch(getLoginUrl(),request) && req.getMethod().equalsIgnoreCase("GET");
         return b || sup;
+    }
+
+    @Override
+    protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
+        return true;
     }
 }

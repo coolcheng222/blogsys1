@@ -7,10 +7,7 @@ import com.sealll.user.service.UserService;
 import com.sealll.user.utils.UserValidator;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,6 +47,10 @@ public class UserController {
     @PostMapping("/register")
     public Msg register(User user){
         String s = validator.userValidate(user);
+        User byUsername = userService.getByUsername(user);
+        if(byUsername != null){
+            return Msg.fail("用户名已存在");
+        }
         if(s != null){
             return Msg.fail(s);
         }else{
@@ -57,5 +58,18 @@ public class UserController {
             userService.addUser(user);
             return Msg.redirect("/login");
         }
+    }
+
+    @GetMapping("/user/{username}")
+    public Msg checkName(@PathVariable("username") String username){
+        User user = new User();
+        user.setUsername(username);
+        User byUsername = userService.getByUsername(user);
+        if(byUsername == null){
+            return Msg.success("");
+        }else{
+            return Msg.fail("用户名已存在");
+        }
+
     }
 }

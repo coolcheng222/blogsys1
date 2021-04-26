@@ -18,14 +18,13 @@ public class MyCredentialsMatcher implements CredentialsMatcher {
     public PasswordParser passwordParser;
     @Override
     public boolean doCredentialsMatch(AuthenticationToken authenticationToken, AuthenticationInfo authenticationInfo) {
-        String password = (String)authenticationInfo.getCredentials();
-        PrincipalCollection principals = authenticationInfo.getPrincipals();
-        String username = (String) principals.getPrimaryPrincipal();
-
+        String validPassword = (String)authenticationInfo.getCredentials();
+        String username = (String)authenticationToken.getPrincipal();
+        String password = new String((char[])authenticationToken.getCredentials());
+//        System.out.println(validPassword);
         String s = passwordParser.transPassword(username, password);
-        String credentials1 = (String) authenticationToken.getCredentials();
-
-        return credentials1.equals(s);
+//        System.out.println(s);
+        return validPassword.equals(s);
 
     }
 }

@@ -72,8 +72,8 @@ public class KaptController implements ApplicationContextAware {
                 ((Jedis)o).close();
             }
             long end = System.currentTimeMillis();
-            System.out.println("2- ---" + (end - start2));
-            System.out.println("1- ---" + (end - start));
+//            System.out.println("2- ---" + (end - start2));
+//            System.out.println("1- ---" + (end - start));
         }).start();
 
 

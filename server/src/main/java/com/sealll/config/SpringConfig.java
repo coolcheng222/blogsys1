@@ -13,6 +13,7 @@ import com.sealll.constant.FileConstants;
 import com.sealll.shiro.filter.AnnoFilter2;
 import com.sealll.shiro.filter.AuthenticationFilter2;
 import com.sealll.shiro.filter.KaptFilter;
+import com.sealll.shiro.md5.MyCredentialsMatcher;
 import com.sealll.shiro.realm.UserRealm;
 import com.sealll.shiro.redis.PipelineRedisManager;
 import org.apache.shiro.SecurityUtils;
@@ -152,14 +153,14 @@ public class SpringConfig {
 
         @DependsOn({"kaptFilter","annoFilter2","authenticationFilter2"})
         @Bean
-        public ShiroFilterFactoryBean shiroFilter(KaptFilter kaptFilter, AnnoFilter2 annoFilter2,AuthenticationFilter2 authenticationFilter2){
+        public ShiroFilterFactoryBean shiroFilter(KaptFilter kaptFilter, AnnoFilter2 annoFilter2,AuthenticationFilter2 authenticationFilter2,SecurityManager securityManager){
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
             Map<String, Filter> filters = new HashMap<>();
             filters.put("authc2",authenticationFilter2);
             filters.put("kapt",kaptFilter);
             filters.put("anno2",annoFilter2);
             factoryBean.setFilters(filters);
-            factoryBean.setSecurityManager(securityManager());
+            factoryBean.setSecurityManager(securityManager);
             factoryBean.setLoginUrl("/login");
             HashMap<String,String> map = new HashMap<>();
             map.put("/logout","logout");
@@ -173,23 +174,25 @@ public class SpringConfig {
 
         }
         @Bean
-        public SecurityManager securityManager(){
+        public SecurityManager securityManager(Realm realm){
             DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
             manager.setSessionManager(sessionManager());
-            manager.setRealm(realm());
+            manager.setRealm(realm);
             SecurityUtils.setSecurityManager(manager);
             return manager;
         }
         @Bean
         public SessionManager sessionManager(){
             DefaultWebSessionManager manager = new DefaultWebSessionManager();
+            manager.getSessionIdCookie().setPath("/");
 //            manager.setSessionDAO(redisSessionDAO());
             manager.setCacheManager(redisCacheManager());
             return manager;
         }
         @Bean
-        public Realm realm(){
+        public Realm realm(MyCredentialsMatcher credentialsMatcher){
             UserRealm userRealm = new UserRealm();
+            userRealm.setCredentialsMatcher(credentialsMatcher);
             userRealm.setAuthenticationCachingEnabled(true);
             userRealm.setAuthorizationCachingEnabled(true);
             return userRealm;
