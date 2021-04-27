@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-console.log(axios);
+// console.log(axios);
 // var protocol = "http";
 // var host = "localhost";
 // var port = "8080";

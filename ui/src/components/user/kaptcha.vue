@@ -16,9 +16,6 @@
                 this.url = axios.defaults.baseURL + "kaptcha?i=" + Math.random();
             }
         },
-        mounted() {
-            console.log(this.$route);
-        }
     }
 </script>
 

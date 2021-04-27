@@ -1,6 +1,7 @@
 <template>
     <div class="outer">
         <div class="inner">
+            <div class="msg">{{message}}</div>
             <el-form :model="user" :rules="rules" @submit.prevent label-position="left" label-width="80px">
                 <el-form-item label="用户名" prop="username">
                     <el-col :span="20">
@@ -28,7 +29,7 @@
                         <el-input v-model="user.kaptcha" placeholder="验证码"></el-input>
                     </el-col>
                     <el-col :span="9">
-                        <kaptcha></kaptcha>
+                        <kaptcha :key="key"></kaptcha>
                     </el-col>
                 </el-form-item>
                 <el-form-item>
@@ -108,6 +109,8 @@
                 confirmPassword: "",
                 isConfirm: false,
                 allOk,
+                message: '',
+                key: 1,
 
                 rules: {
                     username: [
@@ -128,6 +131,7 @@
         },
         methods: {
             register() {
+                this.message = '';
                 if(this.confirm1()){
                     axios({
                         url: '/register',
@@ -135,17 +139,19 @@
                         data: qs.stringify(this.user)
                     }).then(data=>{
                         if(data.data.errno == 1){
-                            return Promise.reject(data.data);
+                            return Promise.reject(data.data.message);
                         }else{
                             return Promise.resolve(data.data);
                         }
-                    }).then(data =>{
+                    },error => error.toString())
+                    .then(data =>{
                         if(data.errno == 2){
+                            alert("注册成功,即将跳转到登录页面");
                             this.$router.push(data.message);
                         }
                     },error =>{
-                        this.$router.replace("/user/register");
-                        console.log(error);
+                            this.message = error;
+                            this.key++;
                     })
                 }else{
                     this.isConfirm = true;
@@ -160,7 +166,12 @@
             },
             confirming(){
                 this.isConfirm = false;
+            },
+            updateKaptcha() {
+                this.key++;
             }
+        },beforeRouteUpdate(){
+            this.updateKaptcha();
         },
         computed:{
             canReg: function () {
@@ -175,6 +186,7 @@
 <style scoped>
     .outer {
         height: 100%;
+        width: 426px;
         background-color: rgba(44, 150, 154, 0);
         margin-top: 20px;
         /*border-top: red 2px solid;*/
@@ -187,7 +199,7 @@
 
     .inner {
         padding: 20px;
-        padding-top: 50px;
+        padding-top: 10px;
     }
 
     .el-form-item >>> .el-form-item__label {
@@ -198,5 +210,11 @@
 
     .el-button {
         width: 150px;
+    }
+    .msg{
+        text-align: center;
+        height: 18px;
+        margin: 10px auto;
+        color: red;
     }
 </style>

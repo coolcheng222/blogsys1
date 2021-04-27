@@ -25,7 +25,9 @@ public class AnnoFilter2 extends AdviceFilter {
 
         Subject subject = SecurityUtils.getSubject();
         if(subject.isAuthenticated()){
-            response.getWriter().write(mapper.writeValueAsString(Msg.redirect("/index")));
+            Msg success = Msg.success((String) subject.getPrincipal());
+            response.getWriter()
+                    .write(mapper.writeValueAsString(success));
             return false;
         }else{
             return true;

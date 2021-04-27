@@ -4,15 +4,34 @@
 
 <script>
 
+    import axios from '@/global/axiosConfig.js';
+    import {mapState} from "vuex";
+
     export default {
         name: 'App',
         components: {},
         mounted() {
+            // check login
+            axios({
+                url:'/login',
+                method:'POST'
+            }).then(data=>{
+                if(data.data.errno === 0){
+                    this.$store.dispatch('login',data.data.message);
+                }
+            });
+            // $router
+
         },
         methods: {
             send(){
             }
         },
+        computed:{
+            ...mapState({
+                beforePath:'beforePath'
+            })
+        }
     }
 </script>
 

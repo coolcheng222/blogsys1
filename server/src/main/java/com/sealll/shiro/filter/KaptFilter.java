@@ -32,7 +32,7 @@ public class KaptFilter extends AdviceFilter {
 //        System.out.println(inner);
 //        System.out.println(parameter);
         if(parameter == null || !parameter.equals(inner)){
-            response.getWriter().write(mapper.writeValueAsString(Msg.fail("keptcha error").extend("验证码错误")));
+            response.getWriter().write(mapper.writeValueAsString(Msg.fail("验证码错误")));
             SecurityUtils.getSubject().logout();
             return false;
         }

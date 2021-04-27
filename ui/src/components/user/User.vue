@@ -18,6 +18,7 @@
 
 <script>
     import UserHeader from "./UserHeader";
+    import {mapState} from "vuex";
 
     export default {
         name: "User",
@@ -47,10 +48,25 @@
                     return [14,8,2];
                 }
                 return [];
-            }
+            },
+            ...mapState({
+                isLogin: 'isLogin'
+            })
+        },
+        beforeRouteEnter (to, from, next) {
+            next(vm=>{
+                console.log(vm);
+                if(vm.$store.state.isLogin){
+                    vm.$store.dispatch('fromLogin');
+                    vm.$router.push("/index");
+                }
+            })
         },
         beforeRouteUpdate(to){
-            console.log(to);
+            // console.log(to);
+            if(this.isLogin){
+                this.$store.dispatch('fromLogin',this.$router);
+            }
             if (to.fullPath.match("login")) {
                 this.theme = "Login";
             } else if (to.fullPath.match("register")) {

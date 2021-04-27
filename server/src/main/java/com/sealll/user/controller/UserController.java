@@ -5,6 +5,7 @@ import com.sealll.constant.Router;
 import com.sealll.user.bean.User;
 import com.sealll.user.service.UserService;
 import com.sealll.user.utils.UserValidator;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +31,13 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/login")
-    public Msg login(HttpServletRequest request){
+    public Msg login(HttpServletRequest request,@Param("username") String username){
         Object failure = request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 
         if (failure == null) {
-            return Msg.redirect(Router.INDEX);
+            return Msg.success(username);
         }else{
-            return Msg.fail("login fail, username or password error");
+            return Msg.fail("用户名或密码错误");
         }
     }
 

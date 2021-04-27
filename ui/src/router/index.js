@@ -1,8 +1,9 @@
-import {createRouter, createWebHashHistory} from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import User from "../components/user/User";
 import Register from "../components/user/Register";
 import Login from "../components/user/Login";
 import index from "../components/index/index"
+import Test1 from "../components/test/Test1";
 
 const routes = [
     {
@@ -25,12 +26,16 @@ const routes = [
         ]
     },
     {name:'index',path:'/index',component: index},
-    {name:'default',path:"/",redirect:'/index'}
+    {name:'default',path:"/",redirect:'/index'},
+    {name:'test',path:"/test",component: Test1}
 ]
 
+
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory("/blogui"),
     routes
 })
+
+
 
 export default router

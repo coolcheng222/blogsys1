@@ -4,7 +4,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.google.code.kaptcha.servlet.KaptchaServlet;
 import com.google.code.kaptcha.util.Config;
 import com.sealll.config.yml.DataSourceConfig;
 import com.sealll.config.yml.RedisConfig;
@@ -13,9 +12,9 @@ import com.sealll.constant.FileConstants;
 import com.sealll.shiro.filter.AnnoFilter2;
 import com.sealll.shiro.filter.AuthenticationFilter2;
 import com.sealll.shiro.filter.KaptFilter;
+import com.sealll.shiro.filter.LogoutFilter2;
 import com.sealll.shiro.md5.MyCredentialsMatcher;
 import com.sealll.shiro.realm.UserRealm;
-import com.sealll.shiro.redis.PipelineRedisManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -23,21 +22,13 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
-import org.crazycake.shiro.RedisCache;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
-import org.crazycake.shiro.RedisSessionDAO;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.support.AbstractBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
@@ -48,12 +39,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.StringValueResolver;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
@@ -153,17 +140,22 @@ public class SpringConfig {
 
         @DependsOn({"kaptFilter","annoFilter2","authenticationFilter2"})
         @Bean
-        public ShiroFilterFactoryBean shiroFilter(KaptFilter kaptFilter, AnnoFilter2 annoFilter2,AuthenticationFilter2 authenticationFilter2,SecurityManager securityManager){
+        public ShiroFilterFactoryBean shiroFilter(KaptFilter kaptFilter,
+                                                  AnnoFilter2 annoFilter2,
+                                                  AuthenticationFilter2 authenticationFilter2,
+                                                  SecurityManager securityManager,
+                                                    LogoutFilter2 logoutFilter2){
             ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
             Map<String, Filter> filters = new HashMap<>();
             filters.put("authc2",authenticationFilter2);
             filters.put("kapt",kaptFilter);
             filters.put("anno2",annoFilter2);
+            filters.put("logout2",logoutFilter2);
             factoryBean.setFilters(filters);
             factoryBean.setSecurityManager(securityManager);
             factoryBean.setLoginUrl("/login");
             HashMap<String,String> map = new HashMap<>();
-            map.put("/logout","logout");
+            map.put("/logout","logout2");
             map.put("/login","anno2,kapt,authc2");
             map.put("/register","anno2,kapt,anon");
             map.put("/**","anon");
