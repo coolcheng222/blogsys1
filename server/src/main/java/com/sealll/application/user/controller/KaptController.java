@@ -1,22 +1,16 @@
-package com.sealll.user.controller;
+package com.sealll.application.user.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import com.google.code.kaptcha.servlet.KaptchaServlet;
-import com.sealll.config.SpringConfig;
 import com.sealll.constant.ParameterConstants;
 import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.web.servlet.ShiroHttpSession;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -29,7 +23,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * @author sealll

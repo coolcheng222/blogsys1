@@ -1,6 +1,6 @@
-package com.sealll.user.utils;
+package com.sealll.application.user.utils;
 
-import com.sealll.user.bean.User;
+import com.sealll.application.user.bean.User;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,4 +1,4 @@
-package com.sealll.user.bean;
+package com.sealll.application.user.bean;
 
 import java.util.Date;
 

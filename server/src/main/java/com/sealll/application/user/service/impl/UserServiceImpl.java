@@ -1,10 +1,10 @@
-package com.sealll.user.service.impl;
+package com.sealll.application.user.service.impl;
 
 import com.sealll.shiro.md5.PasswordParser;
-import com.sealll.user.bean.User;
-import com.sealll.user.bean.UserExample;
+import com.sealll.application.user.bean.User;
+import com.sealll.application.user.bean.UserExample;
 import com.sealll.mapper.UserMapper;
-import com.sealll.user.service.UserService;
+import com.sealll.application.user.service.UserService;
 import org.apache.shiro.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

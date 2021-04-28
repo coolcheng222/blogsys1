@@ -1,6 +1,6 @@
-package com.sealll.user.service;
+package com.sealll.application.user.service;
 
-import com.sealll.user.bean.User;
+import com.sealll.application.user.bean.User;
 
 /**
  * @author sealll

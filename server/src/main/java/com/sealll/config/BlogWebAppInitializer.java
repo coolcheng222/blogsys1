@@ -1,7 +1,7 @@
 package com.sealll.config;
 
 import com.sealll.shiro.filter.JedisCloserFilter;
-import com.sealll.user.interceptor.CorsFilter;
+import com.sealll.application.user.interceptor.CorsFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;

@@ -1,6 +1,6 @@
 package com.sealll.shiro.md5;
 
-import com.sealll.user.bean.User;
+import com.sealll.application.user.bean.User;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.sealll.mapper;
 
-import com.sealll.user.bean.User;
-import com.sealll.user.bean.UserExample;
+import com.sealll.application.user.bean.User;
+import com.sealll.application.user.bean.UserExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

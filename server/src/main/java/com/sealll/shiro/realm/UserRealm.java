@@ -1,7 +1,7 @@
 package com.sealll.shiro.realm;
 
-import com.sealll.user.bean.User;
-import com.sealll.user.service.UserService;
+import com.sealll.application.user.bean.User;
+import com.sealll.application.user.service.UserService;
 import com.sealll.shiro.authorizer.VerySimpleAuthorizationInfo;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
