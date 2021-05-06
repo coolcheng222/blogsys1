@@ -17,7 +17,7 @@
                 method:'POST'
             }).then(data=>{
                 if(data.data.errno === 0){
-                    this.$store.dispatch('login',data.data.message);
+                    this.$store.dispatch('login',data.data.extend);
                 }
             });
             // $router

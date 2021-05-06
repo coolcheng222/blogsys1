@@ -34,8 +34,6 @@
 <script>
     import kaptcha from "./kaptcha";
     // import axios from "axios";
-    import axios from '@/global/axiosConfig.js';
-    import qs from 'qs';
     import {User} from "../../global/clazz";
     import {mapState} from "vuex";
 
@@ -59,37 +57,24 @@
                     this.message = "请勿重复登录";
                 }
                 this.message = '';
-                var {username, password, kaptcha} = this.user;
-                axios({
-                    url: 'login',
-                    method: "POST",
-                    data: qs.stringify({
-                        username, password, kaptcha
-                    }),
-                    header: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                let promise = this.$store.dispatch("login", this.user);
+                // console.log(promise);
+                promise.then(
+                    // eslint-disable-next-line no-unused-vars
+                    data => {
+                        // console.log(data);
+                        this.$router.push('/index');
+                    },error => {
+                        // console.log(error);
+                        this.message = error;
+                        this.user.password = '';
+                        this.user.kaptcha = '';
+                        this.updateKaptcha();
                     }
-                }).then(data => {
-                    if (data.data.errno === 1) {
-                        return Promise.reject(data.data.message);
-                    } else {
-                        return data.data;
-                    }
-                }, msg => {
-                    return Promise.reject(msg.toString());
-                }).then(data => {
-                    this.$store.dispatch("login", data.message);
-                    console.log("aaa");
-                    this.$router.push('/index');
-                }, error => {
-                    this.message = error;
-                    this.user.password = '';
-                    this.user.kaptcha = '';
-                    this.updateKaptcha();
-                })
+                )
             },
             updateKaptcha() {
-                this.key++;
+                this.key = Math.random();
             }
         },
         computed: {
@@ -97,7 +82,7 @@
                 return this.message.length >= 1;
             },
             ...mapState({
-                beforePath: 'beforePath'
+                beforePath: state => state.loginPage.beforePath
             })
         },
         beforeRouteEnter(to, from, next) {
@@ -112,14 +97,14 @@
             this.updateKaptcha();
         },
         beforeRouteLeave(to,from,next){
+            // console.log(this.beforePath);
             if(from.name === 'login' && to.name !== 'register'){
-                // console.log(from)
-                // console.log(to);
                 if(this.beforePath === to.path){
                     this.$store.dispatch('fromLogin');
                     next();
                 }else{
-                    var obj = {path: this.beforePath};
+                    var obj = {path: this.$store.beforePath};
+                    console.log(obj)
                     next(obj);
                 }
                 // console.log(obj)

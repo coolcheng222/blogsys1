@@ -2,7 +2,9 @@ package com.sealll.shiro.realm;
 
 import com.sealll.application.user.bean.User;
 import com.sealll.application.user.service.UserService;
+import com.sealll.constant.ParameterConstants;
 import com.sealll.shiro.authorizer.VerySimpleAuthorizationInfo;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -35,6 +37,8 @@ public class UserRealm extends AuthorizingRealm {
         }else if(password == null){
             throw  new IncorrectCredentialsException("incorrect password or username");
         }
+        String uid = user1.getUid();
+        SecurityUtils.getSubject().getSession().setAttribute(ParameterConstants.UID_SESSION_KEY,uid);
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
                 user1.getUsername(), //用户名
                 user1.getPassword(), //密码

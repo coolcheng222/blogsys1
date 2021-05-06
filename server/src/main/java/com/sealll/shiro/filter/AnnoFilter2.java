@@ -1,7 +1,9 @@
 package com.sealll.shiro.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sealll.application.user.bean.User;
 import com.sealll.bean.Msg;
+import com.sealll.constant.ParameterConstants;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.servlet.AdviceFilter;
@@ -25,9 +27,14 @@ public class AnnoFilter2 extends AdviceFilter {
 
         Subject subject = SecurityUtils.getSubject();
         if(subject.isAuthenticated()){
-            Msg success = Msg.success((String) subject.getPrincipal());
+            String uid = (String)subject.getSession()
+                    .getAttribute(ParameterConstants.UID_SESSION_KEY);
+            String username = (String) subject.getPrincipal();
+            User user = new User();
+            user.setUsername(username);
+            user.setUid(uid);
             response.getWriter()
-                    .write(mapper.writeValueAsString(success));
+                    .write(mapper.writeValueAsString(Msg.success("").extend(user)));
             return false;
         }else{
             return true;

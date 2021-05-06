@@ -29,8 +29,8 @@
             }
             },computed:{
             ...mapState({
-                isLogin: 'isLogin',
-                username: 'username'
+                isLogin: state=>state.user.isLogin,
+                username:  state=>state.user.username
             })
         }
     }

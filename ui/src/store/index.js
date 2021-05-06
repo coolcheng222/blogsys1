@@ -1,20 +1,61 @@
 import { createStore } from 'vuex'
+import qs from "qs";
+import axios from '@/global/axiosConfig.js';
 
-export default createStore({
-  state: {
+
+let userModule = {
+  state:{
     username: '',
-    isLogin: false,
-    beforePath: '/index'
+    uid: '',
+    isLogin: false
   },
   mutations: {
-    login(state,username){
-      state.username = username;
+    login(state,user){
+      state.username = user.username;
       state.isLogin = true;
+      state.uid = user.uid;
     },
     logout(state){
       state.username = '';
+      state.uid = '';
       state.isLogin = false;
+    }
+  },
+  actions: {
+    login(context,userInfo){
+      let {username,password,kaptcha} = userInfo;
+      return axios({
+        url: 'login',
+        method: "POST",
+        data: qs.stringify({
+          username, password, kaptcha
+        }),
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+          .then(data => {
+        if (data.data.errno === 1) {
+          return Promise.reject(data.data.message);
+        } else {
+          context.commit('login',data.data.extend);
+          return data.data.extend;
+        }
+      },
+                  msg => {
+        return Promise.reject(msg.toString());
+      });
     },
+    logout(context){
+      context.commit('logout');
+    }
+  }
+}
+let loginPageModule = {
+  state: {
+    beforePath: '/index'
+  },
+  mutations:{
     toLogin(state,route){
       state.beforePath = route;
     },
@@ -22,20 +63,18 @@ export default createStore({
       state.beforePath = '/index';
     }
   },
-  actions: {
-    login(context,username){
-      context.commit('login',username);
-    },
-    logout(context){
-      context.commit('logout');
-    },
+  actions:{
     toLogin(context,route){
       context.commit('toLogin',route);
     },
     fromLogin(context){
       context.commit('fromLogin')
     }
-  },
+  }
+}
+export default createStore({
   modules: {
+    user: userModule,
+    loginPage: loginPageModule
   }
 })
