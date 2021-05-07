@@ -1,8 +1,10 @@
 package com.sealll.application.post.bean;
 
+import com.sealll.application.tag.bean.Tag;
 import com.sealll.application.user.bean.User;
 
 import java.util.Date;
+import java.util.List;
 
 public class Post {
 
@@ -12,6 +14,7 @@ public class Post {
     private Date time;
     private byte[] content;
     private User author;
+    private List<Tag> tags;
 
     public User getAuthor() {
         return author;
@@ -131,5 +134,13 @@ public class Post {
      */
     public void setContent(byte[] content) {
         this.content = content;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }
