@@ -3,6 +3,7 @@ package com.sealll.mapper;
 import com.sealll.application.post.bean.Post;
 import com.sealll.application.post.bean.PostExample;
 import com.sealll.application.tag.bean.Tag;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ public interface PostMapper {
     public Post getPostWithTagsByPid(String pid);
     public Post getPostTerminalByPid(String pid);
 
-    public Post getPlainPostByExample(PostExample example);
-    public Post getPostWithAuthorByExample(PostExample example);
-    public Post getPostWithTagsByExample(PostExample example);
-    public Post getPostTerminalByExample(PostExample example);
+    public List<Post> getPlainPostByExample(PostExample example);
+    public List<Post> getPostWithAuthorByExample(PostExample example);
+    public List<Post> getPostWithTagsByExample(PostExample example);
+    public List<Post> getPostTerminalByExample(PostExample example);
 
     public boolean insertPost(Post post);
     public boolean insertTags(Post post);

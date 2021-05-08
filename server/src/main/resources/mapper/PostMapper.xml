@@ -2,7 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sealll.mapper.PostMapper">
     <sql id="baseColume">
-        p.p_id,title,time,content
+        p.p_id,title,time,content,description
+    </sql>
+    <sql id="simpleColume">
+        p.p_id,title,time,description
     </sql>
     <sql id="Example_Where_Clause">
         <!--
@@ -64,12 +67,14 @@
         <result property="title" column="title"></result>
         <result property="time" column="time"></result>
         <result property="content" column="content"></result>
+        <result property="description" column="description"></result>
     </resultMap>
     <resultMap id="postWithAuthor" type="com.sealll.application.post.bean.Post">
         <id property="pId" column="p_id"></id>
         <result property="title" column="title"></result>
         <result property="time" column="time"></result>
         <result property="content" column="content"></result>
+        <result property="description" column="description"></result>
         <association property="author" javaType="com.sealll.application.user.bean.User">
             <id property="uid" column="uid"></id>
             <result property="username" column="username"></result>
@@ -80,6 +85,7 @@
         <result property="title" column="title"></result>
         <result property="time" column="time"></result>
         <result property="content" column="content"></result>
+        <result property="description" column="description"></result>
         <collection property="tags" ofType="com.sealll.application.tag.bean.Tag">
             <id property="tag" column="tag"></id>
             <result property="tagname" column="tagname"></result>
@@ -90,6 +96,48 @@
         <result property="title" column="title"></result>
         <result property="time" column="time"></result>
         <result property="content" column="content"></result>
+        <result property="description" column="description"></result>
+        <association property="author" javaType="com.sealll.application.user.bean.User">
+            <id property="uid" column="uid"></id>
+            <result property="username" column="username"></result>
+        </association>
+        <collection property="tags" ofType="com.sealll.application.tag.bean.Tag">
+            <id property="tag" column="tag"></id>
+            <result property="tagname" column="tagname"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="plainPostDesc" type="com.sealll.application.post.bean.Post">
+        <id property="pId" column="p_id"></id>
+        <result property="title" column="title"></result>
+        <result property="time" column="time"></result>
+        <result property="description" column="description"></result>
+    </resultMap>
+    <resultMap id="postWithAuthorDesc" type="com.sealll.application.post.bean.Post">
+        <id property="pId" column="p_id"></id>
+        <result property="title" column="title"></result>
+        <result property="time" column="time"></result>
+        <result property="description" column="description"></result>
+        <association property="author" javaType="com.sealll.application.user.bean.User">
+            <id property="uid" column="uid"></id>
+            <result property="username" column="username"></result>
+        </association>
+    </resultMap>
+    <resultMap id="postWithTagsDesc" type="com.sealll.application.post.bean.Post">
+        <id property="pId" column="p_id"></id>
+        <result property="title" column="title"></result>
+        <result property="time" column="time"></result>
+        <result property="description" column="description"></result>
+        <collection property="tags" ofType="com.sealll.application.tag.bean.Tag">
+            <id property="tag" column="tag"></id>
+            <result property="tagname" column="tagname"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="postTerminalDesc" type="com.sealll.application.post.bean.Post">
+        <id property="pId" column="p_id"></id>
+        <result property="title" column="title"></result>
+        <result property="time" column="time"></result>
+        <result property="description" column="description"></result>
         <association property="author" javaType="com.sealll.application.user.bean.User">
             <id property="uid" column="uid"></id>
             <result property="username" column="username"></result>
@@ -118,7 +166,7 @@
     </select>
 
     <!-- ***************** -->
-    <select id="getPlainPostByExample" resultMap="plainPost">
+    <select id="getPlainPostByExample" resultMap="plainPostDesc">
         <include refid="plainPost"></include>
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />
@@ -127,7 +175,7 @@
             order by #{orderByClause}
         </if>
     </select>
-    <select id="getPostWithAuthorByExample" resultMap="postWithAuthor">
+    <select id="getPostWithAuthorByExample" resultMap="postWithAuthorDesc">
         <include refid="postWithAuthor"></include>
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />
@@ -136,7 +184,7 @@
             order by #{orderByClause}
         </if>
     </select>
-    <select id="getPostWithTagsByExample" resultMap="postWithTags">
+    <select id="getPostWithTagsByExample" resultMap="postWithTagsDesc">
         <include refid="postWithTags"></include>
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />
@@ -145,7 +193,7 @@
             order by #{orderByClause}
         </if>
     </select>
-    <select id="getPostTerminalByExample" resultMap="postTerminal">
+    <select id="getPostTerminalByExample" resultMap="postTerminalDesc">
         <include refid="postTerminal"></include>
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />
@@ -155,7 +203,7 @@
         </if>
     </select>
 
-<!--public boolean insertPost(Post post);-->
+    <!--public boolean insertPost(Post post);-->
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="pId">
         <selectKey keyColumn="pid" keyProperty="pId" order="AFTER" resultType="java.lang.String">
             select p_id
@@ -164,7 +212,7 @@
             order by time desc
             limit 1
         </selectKey>
-        insert into post (p_id,uid,title,content,time)
+        insert into post (p_id,uid,title,content,time,description)
         values
         ('',#{uid},#{title},#{content},
         <if test="time != null">
@@ -172,7 +220,8 @@
         </if>
         <if test="time == null">
             null
-        </if>
+        </if>,
+            #{description}
         )
     </insert>
     <!--public boolean insertTags(Post post);-->
@@ -196,6 +245,9 @@
             </if>
             <if test="content != null">
                 content = #{content,jdbcType=LONGVARBINARY},
+            </if>
+            <if test="description != null">
+                description = #{description},
             </if>
         </set>
         where p_id = #{pId,jdbcType=CHAR}

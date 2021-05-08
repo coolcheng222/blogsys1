@@ -161,6 +161,11 @@
             <artifactId>javamelody-core</artifactId>
             <version>1.69.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.2.0</version>
+        </dependency>
 
 
     </dependencies>

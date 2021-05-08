@@ -3,6 +3,7 @@ package com.sealll.application.post.bean;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.application.user.bean.User;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,9 +13,18 @@ public class Post {
     private String uid;
     private String title;
     private Date time;
-    private byte[] content;
+    private byte[] content = new byte[]{};
+    private String description;
     private User author;
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public User getAuthor() {
         return author;

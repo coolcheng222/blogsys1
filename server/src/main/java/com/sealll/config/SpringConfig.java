@@ -2,6 +2,7 @@ package com.sealll.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageInterceptor;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
@@ -104,7 +105,7 @@ public class SpringConfig {
     static class SpringMybatis{
         @Bean
         @DependsOn("dataSource")
-        public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource){
+        public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource,PageInterceptor interceptor){
             SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
             sqlSessionFactoryBean.setDataSource(dataSource);
             sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("mybatis.xml"));
@@ -119,6 +120,9 @@ public class SpringConfig {
                         }
                         return null;
                     }).toArray(Resource[]::new));
+            sqlSessionFactoryBean.setPlugins(
+                interceptor
+            );
             return sqlSessionFactoryBean;
         }
 
@@ -127,6 +131,17 @@ public class SpringConfig {
             MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
             mapperScannerConfigurer.setBasePackage("com.sealll.mapper");
             return mapperScannerConfigurer;
+        }
+
+        @Bean
+        public PageInterceptor pageInterceptor() throws IOException {
+            PageInterceptor interceptor = new PageInterceptor();
+            InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(FileConstants.PAGE);
+            Properties p = new Properties();
+            p.load(resourceAsStream);
+            interceptor.setProperties(p);
+
+            return interceptor;
         }
     }
 

@@ -6,4 +6,5 @@ package com.sealll.constant;
  */
 public class FileConstants {
     public static final String KAPTCHA = "kaptcha.properties";
+    public static final String PAGE = "page.properties";
 }
