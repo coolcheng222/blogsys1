@@ -1,5 +1,7 @@
 package com.sealll.config;
 
+import com.alibaba.druid.support.http.StatViewServlet;
+import com.alibaba.druid.support.http.WebStatFilter;
 import com.sealll.shiro.filter.JedisCloserFilter;
 import com.sealll.application.user.interceptor.CorsFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -9,6 +11,8 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import javax.servlet.*;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sealll
@@ -33,12 +37,30 @@ public class BlogWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
+
+
+
         //字符编码过滤器
         FilterRegistration.Dynamic charencod = servletContext.addFilter("character", CharacterEncodingFilter.class);
         charencod.setInitParameter("encoding","utf-8");
         charencod.setInitParameter("forceEncoding","true");
         charencod.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
 
+        //druid监控过滤器
+        FilterRegistration.Dynamic druidFilter = servletContext.addFilter("druid", WebStatFilter.class);
+        Map<String,String> initParams2 = new HashMap<>();
+        initParams2.put("exclusions","*.js,*.css,/druid/*");
+        druidFilter.setInitParameters(initParams2);
+        druidFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST),true,"/*");
+
+        //druid监控servlet
+        ServletRegistration.Dynamic statView = servletContext.addServlet("statView", StatViewServlet.class);
+        statView.addMapping("/druid/*");
+        Map<String,String> initParams = new HashMap<>();
+        initParams.put("loginUsername","admin");
+        initParams.put("loginPassword","123456");
+        initParams.put("allow","");
+        statView.setInitParameters(initParams);
 
         //jedis关闭过滤器
         FilterRegistration.Dynamic jedis = servletContext.addFilter("jedis", JedisCloserFilter.class);
