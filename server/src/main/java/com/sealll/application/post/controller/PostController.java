@@ -69,7 +69,7 @@ public class PostController {
 
 
     @PostMapping
-    public Msg addPost(Post post) {
+    public Msg addPost(@RequestBody Post post) {
         String s = postService.validatePost(post);
         if(s != null){
             return Msg.fail(s);
@@ -84,7 +84,7 @@ public class PostController {
     }
 
     @DeleteMapping
-    public Msg deletePost(Post post){
+    public Msg deletePost(@RequestBody Post post){
         try {
             postService.deletePost(post);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class PostController {
     }
 
     @PutMapping
-    public Msg updatePost(Post post){
+    public Msg updatePost(@RequestBody Post post){
         try {
             postService.updatePost(post);
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class PostController {
         return Msg.success("修改成功");
     }
     @PutMapping("/tags")
-    public Msg updateTag(Post post){
+    public Msg updateTag(@RequestBody Post post){
         try{
             postService.updateTags(post);
         } catch (Exception e) {

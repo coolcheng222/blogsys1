@@ -26,7 +26,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public void addPost(Post post) throws DataSourceException {
         boolean insertPost = mapper.insertPost(post);
-        boolean insertTags = mapper.insertTags(post);
+        if(post.getTags().size() >= 1){
+            boolean insertTags = mapper.insertTags(post);
+        }
+
     }
 
     @Override
