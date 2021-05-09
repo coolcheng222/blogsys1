@@ -77,7 +77,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPostByTag(String tid, Integer page) {
+        PageHelper.startPage(page, PageConstants.PAGESIZE);
+        List<Post> postByTag = mapper.getPostByTag(tid);
+        return postByTag;
+    }
+
+    @Override
     public List<Post> searchByTitle(String title,Integer pageNum){
+        title.replace("%","\\%");
+        title.replace("_","\\_");
         PostExample example = new PostExample();
         PostExample.Criteria criteria = example.createCriteria();
         criteria.andTitleLike("%" + title + "%");

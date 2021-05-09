@@ -3,6 +3,7 @@ package com.sealll.application.post.controller;
 import com.github.pagehelper.PageInfo;
 import com.sealll.application.post.bean.Post;
 import com.sealll.application.post.service.PostService;
+import com.sealll.application.tag.bean.Tag;
 import com.sealll.bean.Msg;
 import com.sealll.bean.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class PostController {
             Page page1 = new Page(list, pageInfo);
             return Msg.success("").extend(page1);
         } else {
-            return Msg.fail("未知错误,联系管理员");
+            return Msg.fail("没有相关内容");
         }
     }
 
@@ -63,7 +64,19 @@ public class PostController {
             Page page1 = new Page(list, pageInfo);
             return Msg.success("").extend(page1);
         } else {
-            return Msg.fail("未知错误,联系管理员");
+            return Msg.fail("没有相关内容");
+        }
+    }
+
+    @GetMapping("/tag/{tid}")
+    public Msg getByTag(String tid,Integer page){
+        List<Post> list = postService.getPostByTag(tid,page);
+        if (list != null) {
+            PageInfo pageInfo = new PageInfo(list);
+            Page page1 = new Page(list, pageInfo);
+            return Msg.success("").extend(page1);
+        } else {
+            return Msg.fail("没有相关内容");
         }
     }
 

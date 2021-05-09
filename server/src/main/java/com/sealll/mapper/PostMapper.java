@@ -22,6 +22,8 @@ public interface PostMapper {
     public List<Post> getPostWithTagsByExample(PostExample example);
     public List<Post> getPostTerminalByExample(PostExample example);
 
+    public List<Post> getPostByTag(String tid);
+
     public boolean insertPost(Post post);
     public boolean insertTags(Post post);
 

@@ -25,5 +25,7 @@ public interface PostService {
 
     public String validatePost(Post post);
 
+    public List<Post> getPostByTag(String tid, Integer page);
+
 //    public Post getPlainPostDescription(String )
 }

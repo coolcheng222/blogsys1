@@ -203,6 +203,11 @@
         </if>
     </select>
 
+    <select id="getPostByTag" resultMap="postTerminalDesc">
+        <include refid="postTerminal"></include>
+        where t.tag = #{tid}
+    </select>
+
     <!--public boolean insertPost(Post post);-->
     <insert id="insertPost" useGeneratedKeys="true" keyProperty="pId">
         <selectKey keyColumn="pid" keyProperty="pId" order="AFTER" resultType="java.lang.String">
