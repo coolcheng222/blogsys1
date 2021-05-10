@@ -2,6 +2,16 @@
     <div class="outer">
         <div class="inner">
             <div class="msg">{{message}}</div>
+            <el-dialog
+                    v-model="visible"
+                    width="40%"
+                    :close-on-click-modal="false"
+                    :show-close="false"
+                    :close-on-press-escape="false"
+            >
+                <div>登录中...</div>
+<!--                <el-progress v-if="visible" :percentage="40" :format="()=>''" :indeterminate="true"></el-progress>-->
+            </el-dialog>
             <el-form @submit.prevent label-position="left" label-width="70px">
                 <el-form-item label="用户名">
                     <el-col :span="20">
@@ -49,7 +59,8 @@
             return {
                 user: new User(),
                 message: '',
-                key: 1
+                key: 1,
+                visible: false
             }
         }, methods: {
             login() {
@@ -57,6 +68,7 @@
                     this.message = "请勿重复登录";
                 }
                 this.message = '';
+                this.visible = true;
                 let promise = this.$store.dispatch("login", this.user);
                 // console.log(promise);
                 promise.then(
@@ -71,7 +83,9 @@
                         this.user.kaptcha = '';
                         this.updateKaptcha();
                     }
-                )
+                ).finally(()=>{
+                    this.visible = false;
+                })
             },
             updateKaptcha() {
                 this.key = Math.random();
@@ -103,7 +117,7 @@
                     this.$store.dispatch('fromLogin');
                     next();
                 }else{
-                    var obj = {path: this.$store.beforePath};
+                    var obj = {path: this.$store.loginPage.beforePath};
                     console.log(obj)
                     next(obj);
                 }
@@ -147,5 +161,9 @@
         color: red;
         height: 18px;
         width: 100%;
+    }
+    .el-dialog div{
+        font-size: 15px;
+        text-align: center;
     }
 </style>

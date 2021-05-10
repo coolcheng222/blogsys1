@@ -1,7 +1,8 @@
 <template>
     <div class="outer">
         <div class="inner">
-            <div class="msg">{{message}}</div>
+            <impropt @finish="finish" :dialog-visible="visibling" :progress="progress" :completed="completed" :message="message"></impropt>
+<!--            <div class="msg">{{message}}</div>-->
             <el-form :model="user" :rules="rules" @submit.prevent label-position="left" label-width="80px">
                 <el-form-item label="用户名" prop="username">
                     <el-col :span="20">
@@ -47,10 +48,12 @@
     import axios from "@/global/axiosConfig.js";
     import qs from 'qs';
     import {reactive} from "@vue/reactivity";
+    import Impropt from "./impropt";
 
     export default {
         name: "Register",
         components: {
+            Impropt,
             kaptcha
         }, data() {
             let allOk = reactive({
@@ -112,6 +115,11 @@
                 message: '',
                 key: 1,
 
+                progress: 0,
+                visibling: false,
+                completed: false,
+                success: false,
+
                 rules: {
                     username: [
                         // eslint-disable-next-line no-undef
@@ -132,24 +140,53 @@
         methods: {
             register() {
                 this.message = '';
+                this.success = false;
+                this.progress = 0;
+                this.completed = false;
+                this.success = false;
+                this.visibling = true;
+                let interval1 = window.setInterval(()=> {
+                    if(this.progress < 60 + Math.floor(20 * Math.random())){
+                        this.progress++;
+                    }else{
+                        clearInterval(interval1);
+                    }
+                },10);
                 if(this.confirm1()){
                     axios({
                         url: '/register',
                         method: 'post',
                         data: qs.stringify(this.user)
                     }).then(data=>{
+                        window.clearInterval(interval1);
                         if(data.data.errno == 1){
                             return Promise.reject(data.data.message);
                         }else{
+                            let interval2 = window.setInterval(()=>{
+                                if(this.progress < 70 + Math.floor(20 * Math.random())){
+                                    this.progress++;
+                                }else{
+                                    window.clearInterval(interval2);
+                                }
+                            },50);
                             return Promise.resolve(data.data);
                         }
                     },error => error.toString())
-                    .then(data =>{
-                        if(data.errno == 2){
-                            alert("注册成功,即将跳转到登录页面");
-                            this.$router.push(data.message);
-                        }
+                    .then(() =>{
+                            let interval2 = window.setInterval(()=>{
+                                if(this.progress < 100){
+                                    this.progress++;
+                                }else{
+                                    window.clearInterval(interval2);
+                                    this.completed = true;
+                                    this.message = '注册成功,即将跳转登录界面'
+                                    this.success = true;
+                                }
+                            },10);
+                        // console.log(data.message);
+                            // this.$router.push(data.message);
                     },error =>{
+                            this.completed = true;
                             this.message = error;
                             this.key++;
                     })
@@ -169,6 +206,13 @@
             },
             updateKaptcha() {
                 this.key++;
+            },
+            finish(){
+                console.log("finish");
+                this.visibling = false;
+                if(this.success){
+                    this.$router.push('/login');
+                }
             }
         },beforeRouteUpdate(){
             this.updateKaptcha();
