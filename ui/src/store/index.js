@@ -42,7 +42,8 @@ let userModule = {
           return data.data.extend;
         }
       },
-                  msg => {
+      msg => {
+        console.log(msg);
         return Promise.reject(msg.toString());
       });
     },
@@ -65,6 +66,7 @@ let loginPageModule = {
   },
   actions:{
     toLogin(context,route){
+      // console.log(route);
       context.commit('toLogin',route);
     },
     fromLogin(context){

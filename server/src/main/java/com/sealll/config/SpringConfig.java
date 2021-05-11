@@ -97,6 +97,7 @@ public class SpringConfig {
             druidDataSource.setUsername(dataSourceConfig.getUsername());
             druidDataSource.setDriverClassName(dataSourceConfig.getDriverClass());
             druidDataSource.setPassword(dataSourceConfig.getPassword());
+            druidDataSource.setBreakAfterAcquireFailure(true);
             return druidDataSource;
         }
     }

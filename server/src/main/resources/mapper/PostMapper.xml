@@ -52,15 +52,15 @@
     <sql id="postWithTags">
         select p.p_id,title,time,content , t.tag ,t.tagname
         from post p
-        inner join tag_post tp on tp.p_id = p.p_id
-        inner join tag t on tp.tag = t.tag
+        left join tag_post tp on tp.p_id = p.p_id
+        left join tag t on tp.tag = t.tag
     </sql>
     <sql id="postTerminal">
         select <include refid="baseColume"></include>, t.tag,t.tagname,u.uid,u.username
         from post p inner join `User` u
         on p.uid = u.uid
-        inner join tag_post tp on tp.p_id = p.p_id
-        inner join tag t on tp.tag = t.tag
+        left join tag_post tp on tp.p_id = p.p_id
+        left join tag t on tp.tag = t.tag
     </sql>
     <resultMap id="plainPost" type="com.sealll.application.post.bean.Post">
         <id property="pId" column="p_id"></id>

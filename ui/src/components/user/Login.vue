@@ -117,7 +117,7 @@
                     this.$store.dispatch('fromLogin');
                     next();
                 }else{
-                    var obj = {path: this.$store.loginPage.beforePath};
+                    var obj = {path: this.beforePath};
                     console.log(obj)
                     next(obj);
                 }
