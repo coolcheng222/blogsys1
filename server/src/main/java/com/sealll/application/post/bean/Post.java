@@ -17,6 +17,24 @@ public class Post {
     private String description;
     private User author;
     private List<Tag> tags = new ArrayList<>();
+    private Integer faved;
+    private Integer reply;
+
+    public Integer getFaved() {
+        return faved;
+    }
+
+    public void setFaved(Integer faved) {
+        this.faved = faved;
+    }
+
+    public Integer getReply() {
+        return reply;
+    }
+
+    public void setReply(Integer reply) {
+        this.reply = reply;
+    }
 
     public String getDescription() {
         return description;

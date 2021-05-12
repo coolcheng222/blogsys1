@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sealll.mapper.FavMapper">
+    <resultMap id="favList" type="com.sealll.application.fav.bean.Fav">
+        <id column="uid" property="user.uid"></id>
+        <collection property="fav"
+                    ofType="com.sealll.application.post.bean.Post"
+                    resultMap="com.sealll.mapper.PostMapper.postWithAuthorDesc">
+        </collection>
+    </resultMap>
+    <resultMap id="favCount" type="com.sealll.application.fav.bean.Fav">
+        <result column="count" property="count"></result>
+    </resultMap>
+    <resultMap id="favedList" type="com.sealll.application.fav.bean.Faved">
+        <id property="post.pId" column="p_id"></id>
+        <collection property="users" ofType="com.sealll.application.user.bean.User">
+            <id property="uid" column="uid"></id>
+            <result property="username" column="username"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="favedCount" type="com.sealll.application.fav.bean.Faved">
+        <result property="count" column="count"></result>
+    </resultMap>
+    <resultMap id="favedCountList" type="com.sealll.application.fav.bean.Faved">
+        <id property="post.pId" column="p_id"></id>
+        <result property="count" column="count"></result>
+    </resultMap>
+    <!--    public Fav getUserFav(String uid);-->
+    <select id="getUserFav" resultMap="favList">
+        select f.uid, p.p_id,title,time,content,description,p.uid as uid,username
+        from fav f inner join post p
+        on f.p_id=p.p_id
+        inner join User u on p.uid=u.uid
+        where f.uid=#{uid}
+    </select>
+    <!--    public Fav getUserFavCount(String uid);-->
+    <select id="getUserFavCount" resultMap="favCount">
+        select count(1) as count
+        from fav f
+        where f.uid=#{uid}
+    </select>
+    <!--    public Faved getPostFaved(String pid);-->
+    <select id="getPostFaved" resultMap="favedList">
+        select u.username,u.uid,f.p_id
+        from fav f inner join User u on f.uid=u.uid
+        where f.p_id=#{pid}
+    </select>
+    <!--    public Faved getPostFavedCount(String pid);-->
+    <select id="getPostFavedCount" resultMap="favedCount">
+        select count(1) as count
+        from fav f
+        where f.p_id=#{pid}
+    </select>
+    <select id="getPostFavedCountList" resultMap="favedCountList">
+        select p_id,count(1) as count
+        from fav f
+        group by f.p_id
+    </select>
+
+    <!--    public boolean addFav(@Param("uid")String uid,@Param("pid")String pid);-->
+    <insert id="addFav">
+        insert into fav
+        values ('',#{uid},#{pid});
+    </insert>
+    <!--    public boolean deleteFav(@Param("uid")String uid,@Param("pid") String pid);-->
+    <delete id="deleteFav">
+        delete from fav
+        where uid=#{uid} and p_id=#{pid}
+    </delete>
+<!--    public List<Map<String,Integer>> checkFav(@Param("uid")String uid, @Param("pids") List<String> pids);-->
+    <select id="checkFav" resultType="com.sealll.application.fav.bean.Faving">
+        select p.p_id pid,(1-ISNULL(fav_id)) as res
+        from post p left join fav f
+        on p.p_id=f.p_id and f.uid=#{uid}
+        where p.p_id in
+        <foreach collection="pids" item="pid" open="(" close=")" separator=",">
+            #{pid}
+        </foreach>
+    </select>
+</mapper>

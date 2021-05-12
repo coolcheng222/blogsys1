@@ -6,7 +6,10 @@ import com.sealll.application.post.service.PostService;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.bean.Msg;
 import com.sealll.bean.Page;
+import com.sealll.constant.OrderClause;
+import com.sealll.exception.ClauseNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,9 +47,19 @@ public class PostController {
         }
     }
 
+    //to test
     @GetMapping
-    public Msg getByPage(@RequestParam("page") Integer page){
-        List<Post> list = postService.getPagedPostTermial(page);
+    public Msg getByPage(@RequestParam(value="page",defaultValue = "0",required = false) Integer page,
+                         @RequestParam(value="clause",defaultValue = "time",required = false)String clause,
+                         @RequestParam(value="asc",defaultValue = "true",required = false)Boolean asc) throws ClauseNotFoundException {
+        boolean contains = OrderClause.clauses.contains(clause);
+        if(!contains){
+            throw new ClauseNotFoundException("bad order clause");
+        }
+        if(!asc){
+            clause += " desc";
+        }
+        List<Post> list = postService.getPagedPostTermialOrder(page,clause);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
             Page page1 = new Page(list, pageInfo);
@@ -56,6 +69,7 @@ public class PostController {
         }
     }
 
+
     @GetMapping("/title/{title}")
     public Msg getByTitleSearch(@PathVariable("title") String title,@RequestParam("page") Integer page){
         List<Post> list = postService.searchByTitle(title,page);
@@ -63,6 +77,16 @@ public class PostController {
             PageInfo pageInfo = new PageInfo(list);
             Page page1 = new Page(list, pageInfo);
             return Msg.success("").extend(page1);
+        } else {
+            return Msg.fail("没有相关内容");
+        }
+    }
+    //to test
+    @GetMapping("/hint/{title}")
+    public Msg getHintTitleSearch(@PathVariable("title") String title){
+        List<Post> list = postService.hintByTitle(title);
+        if (list != null) {
+            return Msg.success("").extend(list);
         } else {
             return Msg.fail("没有相关内容");
         }

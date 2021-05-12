@@ -17,10 +17,15 @@ public interface PostMapper {
     public Post getPostWithTagsByPid(String pid);
     public Post getPostTerminalByPid(String pid);
 
+    public Post getPostTerminalWithCountByPid(String pid);
+
+
     public List<Post> getPlainPostByExample(PostExample example);
     public List<Post> getPostWithAuthorByExample(PostExample example);
     public List<Post> getPostWithTagsByExample(PostExample example);
     public List<Post> getPostTerminalByExample(PostExample example);
+
+    public List<Post> getPostTerminalWithCountByExample(PostExample example);
 
     public List<Post> getPostByTag(String tid);
 

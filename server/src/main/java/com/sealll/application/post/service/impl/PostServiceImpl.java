@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getPagedPostTermial(Integer pageNum) {
         PageHelper.startPage(pageNum, PageConstants.PAGESIZE);
-        List<Post> list = mapper.getPostTerminalByExample(new PostExample());
+        List<Post> list = mapper.getPostTerminalWithCountByExample(new PostExample());
         return list;
 //        PageInfo pageInfo = new PageInfo(list);
 //        Map<String,Object> res = new HashMap<>();
@@ -61,8 +61,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPagedPostTermialOrder(Integer pageNum,String clause) {
+        PostExample postExample = new PostExample();
+        postExample.setOrderByClause(clause);
+        PageHelper.startPage(pageNum, PageConstants.PAGESIZE);
+        List<Post> list = mapper.getPostTerminalWithCountByExample(postExample);
+        return list;
+    }
+
+    @Override
     public Post getPostByPid(String pid){
-        Post post = mapper.getPostTerminalByPid(pid);
+        Post post = mapper.getPostTerminalWithCountByPid(pid);
         return post;
     }
 
@@ -92,6 +101,18 @@ public class PostServiceImpl implements PostService {
         criteria.andTitleLike("%" + title + "%");
         PageHelper.startPage(pageNum,PageConstants.PAGESIZE);
         List<Post> list = mapper.getPostTerminalByExample(example);
+        return list;
+    }
+
+    @Override
+    public List<Post> hintByTitle(String title) {
+        title.replace("%","\\%");
+        title.replace("_","\\_");
+        PostExample example = new PostExample();
+        PostExample.Criteria criteria = example.createCriteria();
+        criteria.andTitleLike( title + "%");
+        PageHelper.startPage(1,PageConstants.PAGESIZE);
+        List<Post> list = mapper.getPlainPostByExample(example);
         return list;
     }
 

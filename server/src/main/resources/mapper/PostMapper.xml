@@ -62,6 +62,18 @@
         left join tag_post tp on tp.p_id = p.p_id
         left join tag t on tp.tag = t.tag
     </sql>
+    <sql id="postTerminalWithCount">
+        select <include refid="baseColume"></include>, t.tag,t.tagname,u.uid,u.username,(select count(re_id)
+        from post p1 LEFT JOIN reply re on p1.p_id=re.p_id
+        where p1.p_id=p.p_id
+        ) as reply,(select count(f.fav_id)
+        from post p2 LEFT JOIN fav f on p2.p_id=f.p_id
+        where p2.p_id=p.p_id
+        ) as faved
+        from post p left join tag_post tp on p.p_id=tp.p_id
+        left join tag t on tp.tag=t.tag
+        inner join `User` u on u.uid=p.uid
+    </sql>
     <resultMap id="plainPost" type="com.sealll.application.post.bean.Post">
         <id property="pId" column="p_id"></id>
         <result property="title" column="title"></result>
@@ -97,6 +109,23 @@
         <result property="time" column="time"></result>
         <result property="content" column="content"></result>
         <result property="description" column="description"></result>
+        <association property="author" javaType="com.sealll.application.user.bean.User">
+            <id property="uid" column="uid"></id>
+            <result property="username" column="username"></result>
+        </association>
+        <collection property="tags" ofType="com.sealll.application.tag.bean.Tag">
+            <id property="tag" column="tag"></id>
+            <result property="tagname" column="tagname"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="postTerminalWithCount" type="com.sealll.application.post.bean.Post">
+        <id property="pId" column="p_id"></id>
+        <result property="title" column="title"></result>
+        <result property="time" column="time"></result>
+        <result property="content" column="content"></result>
+        <result property="description" column="description"></result>
+        <result property="reply" column="reply"></result>
+        <result property="faved" column="faved"></result>
         <association property="author" javaType="com.sealll.application.user.bean.User">
             <id property="uid" column="uid"></id>
             <result property="username" column="username"></result>
@@ -164,6 +193,10 @@
         <include refid="postTerminal"></include>
         where p.p_id = #{pid}
     </select>
+    <select id="getPostTerminalWithCountByPid" resultMap="postTerminalWithCount">
+        <include refid="postTerminalWithCount"></include>
+        where p.p_id=#{pid}
+    </select>
 
     <!-- ***************** -->
     <select id="getPlainPostByExample" resultMap="plainPostDesc">
@@ -172,7 +205,7 @@
             <include refid="Example_Where_Clause" />
         </if>
         <if test="orderByClause != null">
-            order by #{orderByClause}
+            order by ${orderByClause}
         </if>
     </select>
     <select id="getPostWithAuthorByExample" resultMap="postWithAuthorDesc">
@@ -190,7 +223,7 @@
             <include refid="Example_Where_Clause" />
         </if>
         <if test="orderByClause != null">
-            order by #{orderByClause}
+            order by ${orderByClause}
         </if>
     </select>
     <select id="getPostTerminalByExample" resultMap="postTerminalDesc">
@@ -199,7 +232,16 @@
             <include refid="Example_Where_Clause" />
         </if>
         <if test="orderByClause != null">
-            order by #{orderByClause}
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="getPostTerminalWithCountByExample" resultMap="postTerminalWithCount">
+        <include refid="postTerminalWithCount"></include>
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
         </if>
     </select>
 
