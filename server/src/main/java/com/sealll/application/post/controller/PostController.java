@@ -5,7 +5,6 @@ import com.sealll.application.post.bean.Post;
 import com.sealll.application.post.service.PostService;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.bean.Msg;
-import com.sealll.bean.Page;
 import com.sealll.constant.OrderClause;
 import com.sealll.exception.ClauseNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +35,11 @@ public class PostController {
     }
 
     @GetMapping("/user/{uid}")
-    public Msg getByUid(@PathVariable("uid") String uid, @RequestParam("page") Integer page) {
+    public Msg getByUid(@PathVariable("uid") String uid, @RequestParam(value="page",defaultValue = "1",required = false) Integer page) {
         List<Post> list = postService.getByUid(uid, page);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
-            Page page1 = new Page(list, pageInfo);
-            return Msg.success("").extend(page1);
+            return Msg.success("").extend(pageInfo);
         } else {
             return Msg.fail("该用户还没发过文章");
         }
@@ -49,7 +47,7 @@ public class PostController {
 
     //to test
     @GetMapping
-    public Msg getByPage(@RequestParam(value="page",defaultValue = "0",required = false) Integer page,
+    public Msg getByPage(@RequestParam(value="page",defaultValue = "1",required = false) Integer page,
                          @RequestParam(value="clause",defaultValue = "time",required = false)String clause,
                          @RequestParam(value="asc",defaultValue = "true",required = false)Boolean asc) throws ClauseNotFoundException {
         boolean contains = OrderClause.clauses.contains(clause);
@@ -62,8 +60,7 @@ public class PostController {
         List<Post> list = postService.getPagedPostTermialOrder(page,clause);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
-            Page page1 = new Page(list, pageInfo);
-            return Msg.success("").extend(page1);
+            return Msg.success("").extend(pageInfo);
         } else {
             return Msg.fail("没有相关内容");
         }
@@ -71,12 +68,11 @@ public class PostController {
 
 
     @GetMapping("/title/{title}")
-    public Msg getByTitleSearch(@PathVariable("title") String title,@RequestParam("page") Integer page){
+    public Msg getByTitleSearch(@PathVariable("title") String title,@RequestParam(value="page",defaultValue = "1",required = false) Integer page){
         List<Post> list = postService.searchByTitle(title,page);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
-            Page page1 = new Page(list, pageInfo);
-            return Msg.success("").extend(page1);
+            return Msg.success("").extend(pageInfo);
         } else {
             return Msg.fail("没有相关内容");
         }
@@ -93,12 +89,11 @@ public class PostController {
     }
 
     @GetMapping("/tag/{tid}")
-    public Msg getByTag(String tid,Integer page){
+    public Msg getByTag(@PathVariable("tid")String tid,@RequestParam(value="page",defaultValue = "1",required = false)Integer page){
         List<Post> list = postService.getPostByTag(tid,page);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
-            Page page1 = new Page(list, pageInfo);
-            return Msg.success("").extend(page1);
+            return Msg.success("").extend(pageInfo);
         } else {
             return Msg.fail("没有相关内容");
         }

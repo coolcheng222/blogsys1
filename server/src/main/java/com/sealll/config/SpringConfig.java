@@ -45,6 +45,7 @@ import javax.servlet.Filter;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -91,13 +92,14 @@ public class SpringConfig {
         }
 
         @Bean
-        public DataSource dataSource(){
+        public DataSource dataSource() throws SQLException {
             DruidDataSource druidDataSource = new DruidDataSource();
             druidDataSource.setUrl(dataSourceConfig.getUrl());
             druidDataSource.setUsername(dataSourceConfig.getUsername());
             druidDataSource.setDriverClassName(dataSourceConfig.getDriverClass());
             druidDataSource.setPassword(dataSourceConfig.getPassword());
             druidDataSource.setBreakAfterAcquireFailure(true);
+            druidDataSource.setFilters("config,stat");
             return druidDataSource;
         }
     }
