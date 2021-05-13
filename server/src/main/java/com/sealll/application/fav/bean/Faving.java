@@ -6,7 +6,7 @@ package com.sealll.application.fav.bean;
  */
 public class Faving {
     private String pid;
-
+    private Boolean res;
     @Override
     public String toString() {
         return "Faving{" +
@@ -15,7 +15,7 @@ public class Faving {
                 '}';
     }
 
-    private Boolean res;
+
 
     public String getPid() {
         return pid;

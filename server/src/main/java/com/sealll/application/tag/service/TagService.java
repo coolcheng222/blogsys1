@@ -14,6 +14,7 @@ public interface TagService {
     public Tag getPostCount(String tid);
     public List<Tag> orderByPostCount(int n);
     public List<Tag> selectPostCount();
+    public Tag selectPostByTid(String tid, Integer page);
     public List<Tag> searchByTagname(String tagname);
 
     boolean deleteTag(Tag tag);

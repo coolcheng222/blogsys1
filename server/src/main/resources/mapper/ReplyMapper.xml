@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sealll.mapper.ReplyMapper">
+<!--    public boolean addReply(Reply reply);-->
+    <insert id="addReply">
+        insert into reply
+        (p_id,re_id,uid,content)
+        values
+        (#{post.pId},'',#{user.uid},#{content})
+    </insert>
+<!--    public boolean deleteReply(String reid);-->
+    <delete id="deleteReply">
+        delete from reply
+        where re_id=#{reid}
+    </delete>
+<!--    public List<Reply> getPostReplyListOrder(@Param("uid") String uid,-->
+<!--    @Param("pid") String pid,-->
+<!--    @Param("clause")String clause);-->
+<!--    public List<Reply> getUserReplyList(String uid);-->
+</mapper>

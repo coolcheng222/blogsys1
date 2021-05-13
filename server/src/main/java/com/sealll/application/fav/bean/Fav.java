@@ -10,16 +10,16 @@ import java.util.List;
  * @time 2021/5/11 21:10
  */
 public class Fav {
-    private User user;
+    private String uid;
     private List<Post> fav;
     private Integer count;
 
-    public User getUser() {
-        return user;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public List<Post> getFav() {

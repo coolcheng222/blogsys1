@@ -8,6 +8,7 @@ import com.sealll.constant.PageConstants;
 import com.sealll.mapper.PostMapper;
 import org.apache.ibatis.datasource.DataSourceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+@Async
 public class PostServiceImpl implements PostService {
 
     @Autowired

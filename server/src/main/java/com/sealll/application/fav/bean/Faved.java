@@ -11,16 +11,16 @@ import java.util.List;
  * @time 2021/5/11 21:12
  */
 public class Faved {
-    private Post post;
+    private String pid;
     private List<User> users = new ArrayList<>();
     private Integer count;
 
-    public Post getPost() {
-        return post;
+    public String getPid() {
+        return pid;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public List<User> getUsers() {

@@ -10,6 +10,10 @@
     <id column="tag" jdbcType="CHAR" property="tag" />
     <result column="tagname" jdbcType="CHAR" property="tagname" />
   </resultMap>
+  <resultMap id="TagWithPost" type="com.sealll.application.tag.bean.Tag" extends="BaseResultMap">
+    <id column="tag" jdbcType="CHAR" property="tag" />
+    <collection property="list" ofType="com.sealll.application.post.bean.Post" resultMap="com.sealll.mapper.PostMapper.postWithAuthorDesc"></collection>
+  </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
@@ -137,6 +141,14 @@
     on t.tag = tp.tag
     where t.tag=#{tag}
     group by t.tag, t.tagname
+  </select>
+  <select id="selectPostByTid" resultMap="TagWithPost">
+    select t.tag,t.tagname,<include refid="com.sealll.mapper.PostMapper.baseColume"></include>,p.uid as uid,username
+    from tag t inner join tag_post tp
+    on t.tag = tp.tag
+    inner join post p on tp.p_id=p.p_id
+    inner join `User` u on p.uid=u.uid
+    where t.tag=#{tag}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--

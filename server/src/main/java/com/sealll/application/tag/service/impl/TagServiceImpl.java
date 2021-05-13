@@ -1,11 +1,15 @@
 package com.sealll.application.tag.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.application.tag.bean.TagExample;
 import com.sealll.application.tag.service.TagService;
+import com.sealll.constant.PageConstants;
 import com.sealll.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +18,8 @@ import java.util.List;
  * @time 2021/5/9 17:33
  */
 @Service
+@Transactional
+@Async
 public class TagServiceImpl implements TagService {
     @Autowired
     private TagMapper tagMapper;
@@ -45,6 +51,13 @@ public class TagServiceImpl implements TagService {
     public List<Tag> selectPostCount() {
         List<Tag> tags = tagMapper.selectPostCount();
         return tags;
+    }
+
+    @Override
+    public Tag selectPostByTid(String tid, Integer page) {
+        PageHelper.startPage(page, PageConstants.PAGESIZE);
+        Tag tag = tagMapper.selectPostCountByTid(tid);
+        return tag;
     }
 
     @Override

@@ -21,4 +21,5 @@ public interface TagMapper {
     List<Tag> orderByPostCount(int n);
     List<Tag> selectPostCount();
     Tag selectPostCountByTid(String tid);
+    Tag selectPostByTid(String tid);
 }

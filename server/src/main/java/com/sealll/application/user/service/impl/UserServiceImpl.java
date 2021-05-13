@@ -7,6 +7,7 @@ import com.sealll.mapper.UserMapper;
 import com.sealll.application.user.service.UserService;
 import org.apache.shiro.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+@Async
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper mapper;

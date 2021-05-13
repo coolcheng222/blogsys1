@@ -1,5 +1,7 @@
 package com.sealll.application.tag.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.sealll.application.post.bean.Post;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.application.tag.service.TagService;
 import com.sealll.bean.Msg;
@@ -57,6 +59,18 @@ public class TagController {
             return Msg.success("").extend(tags);
         }
     }
+
+   /* @GetMapping("/post/{tid}")
+    public Msg getPostByTid(@PathVariable("tid")String tid,
+            @RequestParam(value="page",required = false,defaultValue = "1")Integer page){
+        Tag tags = tagService.selectPostByTid(tid,page);
+        if(tags == null){
+            return Msg.fail("没有tag");
+        }else{
+            PageInfo<Post> info = new PageInfo<>(tags.getList());
+            return Msg.success("").extend(info);
+        }
+    }*/
 
     @PostMapping
     public Msg addTag(@RequestBody Tag tag) {

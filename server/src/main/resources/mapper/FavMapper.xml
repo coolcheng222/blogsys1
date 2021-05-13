@@ -2,58 +2,63 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sealll.mapper.FavMapper">
     <resultMap id="favList" type="com.sealll.application.fav.bean.Fav">
-        <id column="uid" property="user.uid"></id>
+        <id column="id" property="uid"></id>
         <collection property="fav"
                     ofType="com.sealll.application.post.bean.Post"
                     resultMap="com.sealll.mapper.PostMapper.postWithAuthorDesc">
         </collection>
     </resultMap>
     <resultMap id="favCount" type="com.sealll.application.fav.bean.Fav">
+        <id column="uid" property="uid"></id>
         <result column="count" property="count"></result>
     </resultMap>
     <resultMap id="favedList" type="com.sealll.application.fav.bean.Faved">
-        <id property="post.pId" column="p_id"></id>
+        <id property="pid" column="p_id"></id>
         <collection property="users" ofType="com.sealll.application.user.bean.User">
             <id property="uid" column="uid"></id>
             <result property="username" column="username"></result>
         </collection>
     </resultMap>
     <resultMap id="favedCount" type="com.sealll.application.fav.bean.Faved">
+        <id property="pid" column="p_id"></id>
         <result property="count" column="count"></result>
     </resultMap>
     <resultMap id="favedCountList" type="com.sealll.application.fav.bean.Faved">
-        <id property="post.pId" column="p_id"></id>
+        <id property="pid" column="p_id"></id>
         <result property="count" column="count"></result>
     </resultMap>
     <!--    public Fav getUserFav(String uid);-->
     <select id="getUserFav" resultMap="favList">
-        select f.uid, p.p_id,title,time,content,description,p.uid as uid,username
-        from fav f inner join post p
-        on f.p_id=p.p_id
-        inner join User u on p.uid=u.uid
-        where f.uid=#{uid}
+        select u1.uid as id, p.p_id,title,time,content,description,p.uid as uid,u.username
+        from `User` u1 left join fav f on u1.uid=f.uid
+        left join post p on f.p_id=p.p_id
+        left join `User` u on p.uid=u.uid
+        where u1.uid=#{uid}
     </select>
     <!--    public Fav getUserFavCount(String uid);-->
     <select id="getUserFavCount" resultMap="favCount">
-        select count(1) as count
-        from fav f
-        where f.uid=#{uid}
+        select u.uid,count(fav_id) as count
+        from User u left join fav f on f.uid = u.uid
+        where u.uid=#{uid}
     </select>
     <!--    public Faved getPostFaved(String pid);-->
     <select id="getPostFaved" resultMap="favedList">
-        select u.username,u.uid,f.p_id
-        from fav f inner join User u on f.uid=u.uid
-        where f.p_id=#{pid}
+        select p.p_id,u.username,u.uid
+        from post p left join fav f on p.p_id=f.p_id
+        left join User u on f.uid=u.uid
+        where p.p_id=#{pid}
     </select>
     <!--    public Faved getPostFavedCount(String pid);-->
     <select id="getPostFavedCount" resultMap="favedCount">
-        select count(1) as count
-        from fav f
-        where f.p_id=#{pid}
+        select p.p_id,count(fav_id) as count
+        from post p left join fav f on f.p_id=p.p_id
+        where p.p_id=#{pid}
+        group by p.p_id
     </select>
     <select id="getPostFavedCountList" resultMap="favedCountList">
-        select p_id,count(1) as count
-        from fav f
+        select p.p_id,count(fav_id) as count
+        from fav f right join post p
+        on f.p_id=p.p_id
         group by f.p_id
     </select>
 
