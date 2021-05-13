@@ -18,6 +18,14 @@ public class Reply {
     private Integer stars;
     private Boolean stared;
 
+    public Boolean getStared() {
+        return stared;
+    }
+
+    public void setStared(Boolean stared) {
+        this.stared = stared;
+    }
+
     public String getReid() {
         return reid;
     }

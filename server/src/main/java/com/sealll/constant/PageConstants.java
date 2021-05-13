@@ -6,5 +6,6 @@ package com.sealll.constant;
  */
 public class PageConstants {
     public static final int PAGESIZE = 10;
+    public static final int SMALLPAGE = 5;
     public static final int TAGSIZE = 20;
 }

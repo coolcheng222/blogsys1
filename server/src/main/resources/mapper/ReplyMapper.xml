@@ -1,7 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sealll.mapper.ReplyMapper">
+    <sql id="baseColume">
+        r.re_id,r.p_id,r.content,r.time as time1
+    </sql>
+    <sql id="underPostColume">
+        <include refid="baseColume"></include>,count(s.star_id) as stars,IFNULL(sum(s.uid=#{uid}),0) as stared
+    </sql>
+    <sql id="upderPostMid">
+        select <include refid="underPostColume" />,u.uid,u.username
+        from reply r left join stared s on r.p_id=s.p_id and r.re_id=s.re_id
+        left join User u on r.uid=u.uid
+
+    </sql>
+    <sql id="underUser">
+        select <include refid="baseColume"></include>,p.title,p.time,p.description,u.uid,u.username,count(star_id) as stars
+        from reply r left join stared s on r.p_id=s.p_id and r.re_id=s.re_id
+        left join post p on r.p_id=p.p_id
+        left join User u on u.uid=p.uid
+    </sql>
+    <sql id="allList">
+        select <include refid="baseColume"></include>,count(s.star_id) as stars,p.title,p.time,p.description,u.uid,u.username
+        from reply r left join stared s on r.p_id=s.p_id and r.re_id=s.re_id
+        left join User u on r.uid=u.uid
+        left join post p on p.p_id=r.p_id
+    </sql>
 <!--    public boolean addReply(Reply reply);-->
+    <resultMap id="underPost" type="com.sealll.application.reply.bean.Reply">
+<!--        private String reid;-->
+<!--        private Post post;-->
+<!--        private User user;-->
+<!--        private String content;-->
+<!--        private Date time;-->
+<!--        private Integer stars;-->
+<!--        private Boolean stared;-->
+        <id column="re_id" property="reid"></id>
+        <result column="p_id" property="post.pId"></result>
+        <result property="content" column="content"></result>
+        <result property="time" column="time1"></result>
+        <result property="stars" column="stars"></result>
+        <result property="stared" column="stared"></result>
+        <association property="user">
+            <id property="uid" column="uid"></id>
+            <result property="username" column="username"></result>
+        </association>
+    </resultMap>
+    <resultMap id="underUser" type="com.sealll.application.reply.bean.Reply">
+        <id column="re_id" property="reid"></id>
+        <result property="content" column="content"></result>
+        <result property="time" column="time1"></result>
+        <result property="stars" column="stars"></result>
+        <association property="post" resultMap="com.sealll.mapper.PostMapper.postWithAuthorDesc"></association>
+    </resultMap>
+    <resultMap id="allList" type="com.sealll.application.reply.bean.Reply">
+        <id column="re_id" property="reid"></id>
+        <result property="content" column="content"></result>
+        <result property="stars" column="stars"></result>
+        <association property="user">
+            <id property="uid" column="uid"></id>
+            <result property="username" column="username"></result>
+        </association>
+        <association property="post" resultMap="com.sealll.mapper.PostMapper.plainPostDesc"></association>
+
+    </resultMap>
     <insert id="addReply">
         insert into reply
         (p_id,re_id,uid,content)
@@ -11,10 +72,27 @@
 <!--    public boolean deleteReply(String reid);-->
     <delete id="deleteReply">
         delete from reply
-        where re_id=#{reid}
+        where re_id=#{reid} and p_id=#{pid}
     </delete>
 <!--    public List<Reply> getPostReplyListOrder(@Param("uid") String uid,-->
 <!--    @Param("pid") String pid,-->
 <!--    @Param("clause")String clause);-->
+    <select id="getPostReplyListOrder" resultMap="underPost">
+        <include refid="upderPostMid"></include>
+        where r.p_id=#{pid}
+        group by r.p_id,r.re_id
+        order by ${clause}
+    </select>
 <!--    public List<Reply> getUserReplyList(String uid);-->
+    <select id="getUserReplyList" resultMap="underUser">
+        <include refid="underUser"></include>
+        where r.uid=#{uid}
+        group by r.p_id,r.re_id
+    </select>
+<!--    public List<Reply> getAllReplyListOrder();-->
+    <select id="getAllReplyListOrder" resultMap="underUser">
+        <include refid="allList"></include>
+        group by r.p_id,r.re_id
+        order by stars desc
+    </select>
 </mapper>

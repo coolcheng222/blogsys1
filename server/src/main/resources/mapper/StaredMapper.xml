@@ -3,6 +3,7 @@
 <mapper namespace="com.sealll.mapper.StaredMapper">
     <insert id="addStar">
         insert into stared
+        (star_id,uid,p_id,re_id)
         values
         ('',#{uid},#{pid},#{reid})
     </insert>
