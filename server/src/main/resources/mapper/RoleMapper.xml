@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sealll.mapper.RoleMapper">
-<!--    public Role getRole(String username);-->
-<!--    public boolean updateRole(Role role);-->
+    <!--    public Role getRole(String username);-->
+    <!--    public boolean updateRole(Role role);-->
     <select id="getRole" resultType="com.sealll.application.role.bean.Role">
-        select u.username,role_name role,ttl
+        select u.username,role_name role,ttl,role_id as roleId
         from User u inner join userrole ur on ur.uid=u.uid
         inner join role r on r.role_id=ur.role_id
         where u.username=#{username}
     </select>
     <update id="updateRole">
-       update
-userrole ur inner join User u ON u.uid=ur.uid
-    SET
-    ur.role_id=(select if(count(1),r.role_id,ur.role_id) from role r where r.role_name=#{role})
-    <if test="ttl != null">
-        ,ttl=#{ttl}
-    </if>
-where u.username=#{username}
+        update
+        userrole ur inner join User u ON u.uid=ur.uid
+        SET
+        ur.role_id=#{roleId}
+        <if test="ttl != null">
+            ,ttl=#{ttl}
+        </if>
+        where u.username=#{username}
 
     </update>
-<!--    public boolean deleteExpire(Long time);-->
+    <!--    public boolean deleteExpire(Long time);-->
     <update id="deleteExpire">
         update userrole ur
         set
@@ -28,16 +28,26 @@ where u.username=#{username}
         ttl=null
         where UNIX_TIMESTAMP(ttl) &lt;= #{time}
     </update>
-<!--    public List<Role> getByRoleName(String roleName);-->
+    <!--    public List<Role> getByRoleName(String roleName);-->
     <select id="getByRoleName" resultType="com.sealll.application.role.bean.Role">
-        select u.username,role_name role,ttl
+        select u.username,role_name role,ttl,r.role_id
         from User u inner join userrole ur on ur.uid=u.uid
         inner join role r on r.role_id=ur.role_id
         where r.role_name=#{roleName};
+    </select>
+    <select id="getByRoleId" resultType="com.sealll.application.role.bean.Role">
+        select u.username,role_name role,ttl,r.role_id
+        from User u inner join userrole ur on ur.uid=u.uid
+        inner join role r on r.role_id=ur.role_id
+        where r.role_id=#{roleId};
     </select>
     <select id="getAll" resultType="com.sealll.application.role.bean.Role">
         select u.username,role_name role,ttl
         from User u inner join userrole ur on ur.uid=u.uid
         inner join role r on r.role_id=ur.role_id
+    </select>
+    <select id="getAllRole" resultType="com.sealll.application.role.bean.Role">
+        select role_id roleId,role_name role
+        from role
     </select>
 </mapper>

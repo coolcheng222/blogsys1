@@ -45,9 +45,20 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<Role> getByRoleId(String roleId, Integer page) {
+        PageHelper.startPage(page, PageConstants.PAGESIZE);
+        return roleMapper.getByRoleName(roleId);
+    }
+
+    @Override
     public List<Role> getAll(Integer page) {
         PageHelper.startPage(page,PageConstants.PAGESIZE);
         List<Role> all = roleMapper.getAll();
         return all;
+    }
+
+    @Override
+    public List<Role> getAllRole() {
+        return roleMapper.getAllRole();
     }
 }

@@ -9,15 +9,15 @@ import java.util.Date;
 public class Role {
     private String username;
     private String role;
+    private String roleId;
     private Date ttl;
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                ", ttl=" + ttl +
-                '}';
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
     public Date getTtl() {

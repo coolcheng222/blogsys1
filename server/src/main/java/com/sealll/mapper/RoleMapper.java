@@ -13,5 +13,7 @@ public interface RoleMapper {
     public boolean updateRole(Role role);
     public boolean deleteExpire(Long time);
     public List<Role> getByRoleName(String roleName);
+    public List<Role> getByRoleId(String roleId);
     public List<Role> getAll();
+    public List<Role> getAllRole();
 }

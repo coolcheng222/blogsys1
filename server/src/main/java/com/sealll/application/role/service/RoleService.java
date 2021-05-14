@@ -13,5 +13,7 @@ public interface RoleService {
     public boolean updateRole(Role role);
     public boolean deleteExpire(Long time);
     public List<Role> getByRoleName(String roleName,Integer page);
+    public List<Role> getByRoleId(String roleId,Integer page);
     public List<Role> getAll(Integer page);
+    public List<Role> getAllRole();
 }
