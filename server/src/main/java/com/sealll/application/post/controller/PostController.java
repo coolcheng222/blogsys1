@@ -45,7 +45,6 @@ public class PostController {
         }
     }
 
-    //to test
     @GetMapping
     public Msg getByPage(@RequestParam(value="page",defaultValue = "1",required = false) Integer page,
                          @RequestParam(value="clause",defaultValue = "time",required = false)String clause,
@@ -72,7 +71,7 @@ public class PostController {
         List<Post> list = postService.searchByTitle(title,page);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
-            return Msg.success("").extend(pageInfo);
+            return Msg.success(title).extend(pageInfo);
         } else {
             return Msg.fail("没有相关内容");
         }

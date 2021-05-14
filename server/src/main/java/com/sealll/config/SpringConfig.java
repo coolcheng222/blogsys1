@@ -40,6 +40,10 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
 
 import javax.servlet.Filter;
 import javax.sql.DataSource;
@@ -55,6 +59,7 @@ import java.util.stream.Stream;
  */
 @Configuration
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 @ComponentScan(value = "com.sealll",excludeFilters = {
 //        @ComponentScan.Filter(type=FilterType.ANNOTATION,classes ={ Configuration.class}),
         @ComponentScan.Filter(type= FilterType.ANNOTATION,classes={Controller.class})
@@ -80,6 +85,17 @@ public class SpringConfig {
         dataSourceConfig.setPassword(environment.getProperty("datasource.password"));
         dataSourceConfig.setUsername(environment.getProperty("datasource.username"));
         return dataSourceConfig;
+    }
+
+    @Bean
+    public JedisPool jedisPool(){
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(10);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig,environment.getProperty("redis.host"),
+                Protocol.DEFAULT_PORT,Protocol.DEFAULT_TIMEOUT,
+                environment.getProperty("redis.password"),
+                environment.getProperty("redis.database"));
+        return jedisPool;
     }
 
     @Configuration
@@ -212,7 +228,6 @@ public class SpringConfig {
             RedisManager redisManager = new RedisManager();
             redisManager.setPassword(redisConfig.getPassword());
             redisManager.setHost(redisConfig.getHost());
-
 //            System.out.println(redisConfig);
             return redisManager;
         }

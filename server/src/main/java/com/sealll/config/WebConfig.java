@@ -25,14 +25,14 @@ import java.util.Map;
         @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Controller.class)
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
-    @Override
+    /*@Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         super.configureViewResolvers(registry);
         InternalResourceViewResolver i = new InternalResourceViewResolver();
         i.setPrefix("/WEB-INF/");
         i.setSuffix(".html");
         registry.viewResolver(i);
-    }
+    }*/
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {

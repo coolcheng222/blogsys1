@@ -37,7 +37,7 @@ public class TagController {
         if(tags == null || tags.size() == 0){
             return Msg.fail("没有对应字段");
         }else{
-            return Msg.success("").extend(tags);
+            return Msg.success(tagname).extend(tags);
         }
     }
     @GetMapping("/tags")
