@@ -212,6 +212,7 @@ public class SpringConfig {
             map.put("/fav/**","authc3,pdself");
             map.put("/role/user/*","anon");
             map.put("/role/**","roles2[admin]");
+            map.put("/history/**","authc2");
             map.put("/**","anon");
             factoryBean.setFilterChainDefinitionMap(map);
 //            factoryBean.setUnauthorizedUrl("/");

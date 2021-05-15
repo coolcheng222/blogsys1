@@ -13,6 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SearchController {
     @RequestMapping("/search")
     public Msg record(@RequestParam("title") String title){
-        return Msg.success("");
+        return Msg.success(title);
     }
 }
