@@ -1,5 +1,7 @@
 package com.sealll.shiro.realm;
 
+import com.sealll.application.role.bean.Role;
+import com.sealll.application.role.service.RoleService;
 import com.sealll.application.user.bean.User;
 import com.sealll.application.user.service.UserService;
 import com.sealll.constant.ParameterConstants;
@@ -7,9 +9,13 @@ import com.sealll.shiro.authorizer.VerySimpleAuthorizationInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * @author sealll
@@ -18,10 +24,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String s = (String) principalCollection.getPrimaryPrincipal();
-        AuthorizationInfo authorizationInfo = new VerySimpleAuthorizationInfo(s);
+        Role role = roleService.getRole(s);
+        SecurityUtils.getSubject().getSession().setAttribute(ParameterConstants.ROLEATTR,role);
+        AuthorizationInfo authorizationInfo = new AuthorizationInfo() {
+            @Override
+            public Collection<String> getRoles() {
+                return Arrays.asList(role.getRole());
+            }
+
+            @Override
+            public Collection<String> getStringPermissions() {
+                return null;
+            }
+
+            @Override
+            public Collection<Permission> getObjectPermissions() {
+                return null;
+            }
+        };
         return authorizationInfo;
     }
 

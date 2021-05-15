@@ -5,6 +5,7 @@ import com.sealll.application.role.bean.Role;
 import com.sealll.application.role.service.RoleService;
 import com.sealll.bean.Msg;
 import com.sealll.utils.ResultHandler;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.crazycake.shiro.RedisManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -64,11 +65,12 @@ public class RoleController {
         Msg msg = ResultHandler.handle(all, Objects::isNull, "???", new PageInfo<Role>(all));
         return msg;
     }
+
     @GetMapping("/roles")
     public Msg getAllRole(){
         List<Role> allRole = roleService.getAllRole();
         Msg msg = ResultHandler.handle(allRole, Objects::isNull, "???", allRole);
-
+        return msg;
     }
 
 }

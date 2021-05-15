@@ -74,6 +74,10 @@
         delete from reply
         where re_id=#{reid} and p_id=#{pid}
     </delete>
+    <delete id="delete2Reply">
+        delete from reply
+        where re_id=#{reid} and p_id=#{pid} and uid=#{uid}
+    </delete>
 <!--    public List<Reply> getPostReplyListOrder(@Param("uid") String uid,-->
 <!--    @Param("pid") String pid,-->
 <!--    @Param("clause")String clause);-->

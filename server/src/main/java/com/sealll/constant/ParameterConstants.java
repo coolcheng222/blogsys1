@@ -10,4 +10,5 @@ public class ParameterConstants {
     public static final String PIPELINE = "pipeline";
     public static final String UID_SESSION_KEY = "uid";
     public static final String BAN_STRING = "role:baned";
+    public static final String ROLEATTR = "roleattr";
 }

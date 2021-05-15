@@ -32,8 +32,8 @@ public class ReplyController {
 
     //    public boolean deleteReply(String reid);
     @DeleteMapping
-    public Msg deleteReply(@RequestParam("reid") String reid,@RequestParam("pid")String pid) {
-        boolean b = replyService.deleteReply(reid,pid);
+    public Msg deleteReply(@RequestParam("reid") String reid,@RequestParam("uid")String uid,@RequestParam("pid")String pid) {
+        boolean b = replyService.delete2Reply(reid,uid,pid);
         if (b) {
             return Msg.success("删除成功");
         } else {

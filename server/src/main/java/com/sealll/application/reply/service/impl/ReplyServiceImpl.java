@@ -33,6 +33,11 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
+    public boolean delete2Reply(String reid, String uid, String pid) {
+        return replyMapper.delete2Reply(reid,uid,pid);
+    }
+
+    @Override
     public List<Reply> getPostReplyListOrder(String uid, String pid, String clause,Integer page) {
         PageHelper.startPage(page, PageConstants.PAGESIZE);
         List<Reply> list = replyMapper.getPostReplyListOrder(uid, pid, clause);

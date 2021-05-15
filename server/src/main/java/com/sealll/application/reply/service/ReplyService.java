@@ -12,6 +12,7 @@ import java.util.List;
 public interface ReplyService {
     public boolean addReply(Reply reply);
     public boolean deleteReply(String reid,String pid);
+    public boolean delete2Reply(String reid,String uid,String pid);
 
     /**
      *

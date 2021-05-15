@@ -14,6 +14,7 @@ import java.util.List;
 public interface ReplyMapper {
     public boolean addReply(Reply reply);
     public boolean deleteReply(@Param("reid") String reid, @Param("pid") String pid);
+    public boolean delete2Reply(@Param("reid") String reid,@Param("uid")String uid, @Param("pid") String pid);
 
     /**
      *

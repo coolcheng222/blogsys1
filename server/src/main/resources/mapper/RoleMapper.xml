@@ -4,7 +4,7 @@
     <!--    public Role getRole(String username);-->
     <!--    public boolean updateRole(Role role);-->
     <select id="getRole" resultType="com.sealll.application.role.bean.Role">
-        select u.username,role_name role,ttl,role_id as roleId
+        select u.username,role_name role,ttl,r.role_id as roleId
         from User u inner join userrole ur on ur.uid=u.uid
         inner join role r on r.role_id=ur.role_id
         where u.username=#{username}
