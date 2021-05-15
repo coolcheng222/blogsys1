@@ -26,4 +26,16 @@ public class UserValidator {
         }
         return null;
     }
+    public String updateValidate(User user){
+        String email = user.getEmail();
+        String username = user.getUsername();
+        String password = user.getPassword();
+        if(email != null && !email.matches(emailR)){
+            return "email format error";
+        }
+        if(password != null && !password.matches(usernameR)){
+            return "password should be 5-10 length alpha or digit or _";
+        }
+        return null;
+    }
 }

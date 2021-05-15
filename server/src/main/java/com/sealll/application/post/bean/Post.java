@@ -3,11 +3,12 @@ package com.sealll.application.post.bean;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.application.user.bean.User;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Post {
+public class Post implements Serializable {
 
     private String pId;
     private String uid;

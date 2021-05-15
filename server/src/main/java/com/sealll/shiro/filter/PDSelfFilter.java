@@ -23,20 +23,21 @@ public class PDSelfFilter extends AdviceFilter {
     private UserService userService;
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest req = (HttpServletRequest) request;
-        if(!req.getMethod().equals(HttpMethod.DELETE.name()) && !req.getMethod().equals(HttpMethod.PUT.name())){
-            return true;
-        }
-        String principal = (String) SecurityUtils.getSubject().getPrincipal();
-        User user = new User();
-        user.setUsername(principal);
-        System.out.println(SecurityUtils.getSubject().getSession().getAttribute(ParameterConstants.UID_SESSION_KEY));
-        String uid = userService.getByUsername(user).getUid();
-        String uid1 = req.getParameter("uid");
-        if(uid1.equals(uid)){
-            return true;
-        }else{
-            return false;
-        }
+        return true;
+        //        HttpServletRequest req = (HttpServletRequest) request;
+//        if (!req.getMethod().equals(HttpMethod.DELETE.name()) && !req.getMethod().equals(HttpMethod.PUT.name())) {
+//            return true;
+//        }
+//        String principal = (String) SecurityUtils.getSubject().getPrincipal();
+//        String uid = null;
+//        if (principal != null) {
+//            uid = (String)SecurityUtils.getSubject().getSession().getAttribute(ParameterConstants.UID_SESSION_KEY);
+//        }
+//        String uid1 = req.getParameter("uid");
+//        if (uid1.equals(uid)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 }

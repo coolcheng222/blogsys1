@@ -95,6 +95,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPostByPids(List<String> pids) {
+        PostExample postExample = new PostExample();
+        PostExample.Criteria criteria = postExample.createCriteria();
+        PostExample.Criteria criteria1 = criteria.andPIdIn(pids);
+        return mapper.getPostWithAuthorByExample(postExample);
+    }
+
+    @Override
     public List<Post> searchByTitle(String title,Integer pageNum){
         title.replace("%","\\%");
         title.replace("_","\\_");

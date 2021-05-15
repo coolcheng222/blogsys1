@@ -6,7 +6,11 @@ import com.sealll.application.post.service.PostService;
 import com.sealll.application.tag.bean.Tag;
 import com.sealll.bean.Msg;
 import com.sealll.constant.OrderClause;
+import com.sealll.constant.ParameterConstants;
 import com.sealll.exception.ClauseNotFoundException;
+import com.sealll.utils.SelfChecker;
+import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
@@ -101,6 +105,15 @@ public class PostController {
 
     @PostMapping
     public Msg addPost(@RequestBody Post post) {
+        String uid = post.getUid();
+        Object o = SecurityUtils.getSubject().getSession().getAttribute(ParameterConstants.UID_SESSION_KEY);
+        if(o == null){
+            return Msg.auth("先登录");
+        }else{
+            if(!((String)o).equals(uid)){
+                return Msg.permit("没有权限");
+            }
+        }
         String s = postService.validatePost(post);
         if(s != null){
             return Msg.fail(s);
@@ -116,6 +129,10 @@ public class PostController {
 
     @DeleteMapping
     public Msg deletePost(@RequestBody Post post){
+        boolean check = SelfChecker.check(post.getUid());
+        if(!check){
+            return Msg.permit("并非作者修改");
+        }
         try {
             postService.deletePost(post);
         } catch (Exception e) {
@@ -127,6 +144,10 @@ public class PostController {
 
     @PutMapping
     public Msg updatePost(@RequestBody Post post){
+        boolean check = SelfChecker.check(post.getUid());
+        if(!check){
+            return Msg.permit("并非作者修改");
+        }
         try {
             postService.updatePost(post);
         } catch (Exception e) {
@@ -137,6 +158,10 @@ public class PostController {
     }
     @PutMapping("/tags")
     public Msg updateTag(@RequestBody Post post){
+        boolean check = SelfChecker.check(post.getUid());
+        if(!check){
+            return Msg.permit("并非作者修改");
+        }
         try{
             postService.updateTags(post);
         } catch (Exception e) {

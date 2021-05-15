@@ -6,6 +6,7 @@ import com.sealll.application.fav.bean.Faving;
 import com.sealll.application.fav.service.FavService;
 import com.sealll.bean.Msg;
 import com.sealll.utils.ResultHandler;
+import com.sealll.utils.SelfChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,10 @@ public class FavController {
     private FavService favService;
     @PostMapping
     public Msg add(@RequestParam("uid") String uid,@RequestParam("pid") String pid){
+        boolean check = SelfChecker.check(uid);
+        if(!check){
+            return Msg.permit("并非本人");
+        }
         boolean b = favService.addFav(uid, pid);
         if(!b){
             return Msg.fail("添加失败");
@@ -34,6 +39,10 @@ public class FavController {
     }
     @DeleteMapping
     public Msg delete(@RequestParam("uid") String uid,@RequestParam("pid") String pid){
+        boolean check = SelfChecker.check(uid);
+        if(!check){
+            return Msg.permit("并非本人");
+        }
         boolean b = favService.deleteFav(uid, pid);
         if(!b){
             return Msg.fail("删除失败");

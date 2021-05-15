@@ -71,7 +71,7 @@ public class SpringConfig {
 //        System.out.println(environment.getProperty("redis.host"));
         RedisConfig redisConfig = new RedisConfig();
         redisConfig.setDatabase(Integer.parseInt(environment.getProperty("redis.database")));
-        redisConfig.setHost(environment.getProperty("redis.host"));
+        redisConfig.setHost(environment.getProperty("redis.host") + ":" + environment.getProperty("redis.port"));
         redisConfig.setPassword(environment.getProperty("redis.password"));
         return redisConfig;
     }
@@ -92,7 +92,7 @@ public class SpringConfig {
         JedisPool jedisPool = new JedisPool(jedisPoolConfig,environment.getProperty("redis.host"),
                 Protocol.DEFAULT_PORT,Protocol.DEFAULT_TIMEOUT,
                 environment.getProperty("redis.password"),
-                environment.getProperty("redis.database"));
+                Integer.parseInt(environment.getProperty("redis.database")));
         return jedisPool;
     }
 
@@ -209,7 +209,7 @@ public class SpringConfig {
             map.put("/star","authc2,pdself");
             map.put("/reply","authc3,proles[user,admin],pdself");
             map.put("/fav/check","authc2");
-            map.put("/fav/**","authc3");
+            map.put("/fav/**","authc3,pdself");
             map.put("/role/user/*","anon");
             map.put("/role/**","roles2[admin]");
             map.put("/**","anon");

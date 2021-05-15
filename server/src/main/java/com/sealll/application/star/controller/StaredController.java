@@ -4,6 +4,7 @@ import com.sealll.application.star.bean.Stared;
 import com.sealll.application.star.service.StaredService;
 import com.sealll.bean.Msg;
 import com.sealll.utils.ResultHandler;
+import com.sealll.utils.SelfChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,10 @@ public class StaredController {
 
     @PostMapping
     public Msg addStar(@RequestBody Stared stared){
+        boolean check = SelfChecker.check(stared.getUid());
+        if(!check){
+            return Msg.permit("无权限");
+        }
         boolean b = staredService.addStar(stared);
         if(!b){
             return Msg.fail("收藏失败");
@@ -29,6 +34,10 @@ public class StaredController {
     }
     @DeleteMapping
     public Msg deleteStar(@RequestBody Stared stared){
+        boolean check = SelfChecker.check(stared.getUid());
+        if(!check){
+            return Msg.permit("无权限");
+        }
         boolean b = staredService.deleteStar(stared);
         if(!b){
             return Msg.fail("取消收藏失败");

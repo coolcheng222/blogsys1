@@ -1,6 +1,9 @@
 package com.sealll.application.search.controller;
 
+import com.sealll.bean.Msg;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author sealll
@@ -8,5 +11,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class SearchController {
-
+    @RequestMapping("/search")
+    public Msg record(@RequestParam("title") String title){
+        return Msg.success("");
+    }
 }
