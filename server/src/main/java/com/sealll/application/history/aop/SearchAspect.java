@@ -2,6 +2,9 @@ package com.sealll.application.history.aop;
 
 import com.sealll.application.history.service.HistoryService;
 import com.sealll.bean.Msg;
+import com.sealll.constant.ParameterConstants;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @time 2021/5/15 22:55
  */
 @Aspect
-@Component
 public class SearchAspect {
     @Autowired
     private HistoryService historyService;
@@ -28,11 +30,14 @@ public class SearchAspect {
     @AfterReturning("pointCut1()")
     public void addHistory(JoinPoint joinPoint){
         Object[] args = joinPoint.getArgs();
-        String uid = args[0].toString();
-        String title = args[1].toString();
-        boolean b = historyService.addSearchHistory(uid, title);
-        if(b){
-            logger.info("保存搜索历史记录成功");
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isAuthenticated()){
+            String uid = (String)subject.getSession().getAttribute(ParameterConstants.UID_SESSION_KEY);
+            String title = args[0].toString();
+            boolean b = historyService.addSearchHistory(uid, title);
+            if(b){
+                logger.info("保存搜索历史记录成功");
+            }
         }
     }
 }

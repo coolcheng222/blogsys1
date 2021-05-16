@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sealll.application.user.bean.User;
 import com.sealll.application.user.service.UserService;
 import com.sealll.bean.Msg;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.servlet.AdviceFilter;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,6 +14,8 @@ import com.sealll.shiro.filter.RoleAuthorizationFilter2;
 import com.sealll.shiro.filter.*;
 import com.sealll.shiro.md5.MyCredentialsMatcher;
 import com.sealll.shiro.realm.UserRealm;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -36,6 +38,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -43,6 +47,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
+import javax.jms.ConnectionFactory;
 import javax.servlet.Filter;
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -94,6 +99,13 @@ public class SpringConfig {
                 environment.getProperty("redis.password"),
                 Integer.parseInt(environment.getProperty("redis.database")));
         return jedisPool;
+    }
+
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        PooledConnectionFactory factory = new PooledConnectionFactory();
+        factory.setConnectionFactory(new ActiveMQConnectionFactory(environment.getProperty("active.url")));
+        return factory;
     }
 
     @Configuration
@@ -303,5 +315,15 @@ public class SpringConfig {
 
     }
 
+    @Configuration
+    static class ActiveConfig{
+        @Bean
+        public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory){
+            JmsTemplate jmsTemplate = new JmsTemplate();
+            jmsTemplate.setConnectionFactory(connectionFactory);
+            jmsTemplate.setMessageConverter(new SimpleMessageConverter());
+            return jmsTemplate;
+        }
+    }
 
 }

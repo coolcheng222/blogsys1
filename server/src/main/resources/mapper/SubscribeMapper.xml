@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sealll.mapper.SubscribeMapper">
+    <resultMap id="sub" type="com.sealll.application.sub.bean.Subscribe">
+        <id column="uidx" property="uid"></id>
+        <collection property="userInfos" ofType="com.sealll.application.userinfo.bean.UserInfo">
+            <id column="uid" property="uid"></id>
+            <result property="username" column="username"></result>
+            <result property="rolename" column="rolename"></result>
+            <result property="posts" column="posts"></result>
+            <result property="subing" column="subing"></result>
+            <result property="subbed" column="subbed"></result>
+        </collection>
+    </resultMap>
+<!--    public boolean addSub(String subber,String subbed);-->
+    <insert id="addSub">
+        insert into subscribe
+        (sub_id, subing, subbed) values ('',#{subber},#{subbed})
+    </insert>
+<!--    public boolean deleteSub(String subber,String subbed);-->
+    <delete id="deleteSub">
+        delete from subscribe
+        where subing=#{subber} and subbed=#{subbed}
+    </delete>
+    <select id="checkSub" resultType="java.lang.Boolean">
+        select count(1)
+        from subscribe
+        where subing=#{subber} and subbed=#{subbed}
+    </select>
+<!--    public Subscribe getSubing(String uid);-->
+    <select id="getSubing" resultMap="sub">
+        select '${uid}' uidx,u.uid,u.username,r.role_name as rolename,count(distinct p_id) as posts,count(DISTINCT s1.subing) subbed,count(DISTINCT s2.subbed) subing
+        from User u inner join userrole ur on u.uid = ur.uid
+                    inner join role r on ur.role_id = r.role_id
+                    left join post p on u.uid = p.uid
+                    left join subscribe s1 on u.uid = s1.subbed
+                    left join subscribe s2 on u.uid = s2.subing
+        where u.uid in (select s3.subbed
+                     from subscribe s3
+                     where s3.subing=#{uid})
+        group by u.uid, u.username, r.role_name
+    </select>
+    <select id="getFans" resultMap="sub">
+        select '${uid}' uidx,u.uid,u.username,r.role_name as rolename,count(distinct p_id) as posts,count(DISTINCT s1.subing) subbed,count(DISTINCT s2.subbed) subing
+        from User u inner join userrole ur on u.uid = ur.uid
+                    inner join role r on ur.role_id = r.role_id
+                    left join post p on u.uid = p.uid
+                    left join subscribe s1 on u.uid = s1.subbed
+                    left join subscribe s2 on u.uid = s2.subing
+        where u.uid in (select s3.subing
+                     from subscribe s3
+                     where s3.subbed=#{uid})
+        group by u.uid, u.username, r.role_name
+    </select>
+<!--    public boolean checkSub(String subber,String subbed);-->
+<!--    public Subscribe getFans(String uid);-->
+</mapper>

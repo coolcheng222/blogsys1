@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,9 +64,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPagedPostTermialOrder(Integer pageNum,String clause) {
+    public List<Post> getPagedPostTermialOrder(Integer pageNum,String clause,Long time) {
         PostExample postExample = new PostExample();
         postExample.setOrderByClause(clause);
+        postExample.createCriteria().andTimeLessThan(new Date(time));
         PageHelper.startPage(pageNum, PageConstants.PAGESIZE);
         List<Post> list = mapper.getPostTerminalWithCountByExample(postExample);
         return list;

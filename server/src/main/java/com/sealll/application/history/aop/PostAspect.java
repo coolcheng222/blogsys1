@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
  * @time 2021/5/15 23:10
  */
 @Aspect
-@Component
 public class PostAspect {
     @Autowired
     private HistoryService historyService;

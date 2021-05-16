@@ -17,7 +17,7 @@ public interface PostService {
 
     public List<Post> getPagedPostTermial(Integer pageNum);
 
-    public List<Post> getPagedPostTermialOrder(Integer pageNum,String clause);
+    public List<Post> getPagedPostTermialOrder(Integer pageNum,String clause,Long time);
 
     public List<Post> searchByTitle(String title,Integer pageNum);
     //to test

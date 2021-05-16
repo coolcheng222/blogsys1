@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sealll.mapper.UserInfoMapper">
+<!--    public UserInfo getUserInfo(String uid);-->
+    <select id="getUserInfo" resultType="com.sealll.application.userinfo.bean.UserInfo">
+        select u.uid,u.username,r.role_name as rolename,count(distinct p_id) as posts,count(DISTINCT s1.subing) subbed,count(DISTINCT s2.subbed) subing
+        from User u inner join userrole ur on u.uid = ur.uid
+                    inner join role r on ur.role_id = r.role_id
+                    left join post p on u.uid = p.uid
+                    left join subscribe s1 on u.uid = s1.subbed
+                    left join subscribe s2 on u.uid = s2.subing
+        where u.uid=#{uid}
+        group by u.uid, u.username, r.role_name
+
+    </select>
+</mapper>

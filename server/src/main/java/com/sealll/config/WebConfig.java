@@ -1,8 +1,8 @@
 package com.sealll.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
+import com.sealll.application.history.aop.PostAspect;
+import com.sealll.application.history.aop.SearchAspect;
+import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -24,6 +24,7 @@ import java.util.Map;
 @ComponentScan(value = "com.sealll", useDefaultFilters = false, includeFilters = {
         @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Controller.class)
 })
+@EnableAspectJAutoProxy
 public class WebConfig extends WebMvcConfigurerAdapter {
     /*@Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
@@ -39,5 +40,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
-
+    @Bean
+    public SearchAspect searchAspect(){
+        return new SearchAspect();
+    }
+    @Bean
+    public PostAspect postAspect(){
+        return new PostAspect();
+    }
 }

@@ -52,7 +52,8 @@ public class PostController {
     @GetMapping
     public Msg getByPage(@RequestParam(value="page",defaultValue = "1",required = false) Integer page,
                          @RequestParam(value="clause",defaultValue = "time",required = false)String clause,
-                         @RequestParam(value="asc",defaultValue = "true",required = false)Boolean asc) throws ClauseNotFoundException {
+                         @RequestParam(value="asc",defaultValue = "true",required = false)Boolean asc,
+                         @RequestParam(value="before") Long time) throws ClauseNotFoundException {
         boolean contains = OrderClause.clauses.contains(clause);
         if(!contains){
             throw new ClauseNotFoundException("bad order clause");
@@ -60,7 +61,7 @@ public class PostController {
         if(!asc){
             clause += " desc";
         }
-        List<Post> list = postService.getPagedPostTermialOrder(page,clause);
+        List<Post> list = postService.getPagedPostTermialOrder(page,clause,time);
         if (list != null) {
             PageInfo pageInfo = new PageInfo(list);
             return Msg.success("").extend(pageInfo);
@@ -124,7 +125,8 @@ public class PostController {
             e.printStackTrace();
             return Msg.fail("增加失败");
         }
-        return Msg.success("增加成功");
+
+        return Msg.success("增加成功").extend(post.getpId());
     }
 
     @DeleteMapping

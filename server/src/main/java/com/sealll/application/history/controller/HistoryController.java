@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import java.util.Set;
  * @author sealll
  * @time 2021/5/15 22:42
  */
-@Controller
+@RestController
 @RequestMapping("/history")
 public class HistoryController {
     @Autowired
