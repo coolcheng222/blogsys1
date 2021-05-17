@@ -10,6 +10,7 @@ import org.apache.tomcat.jni.Global;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +20,7 @@ import javax.jms.JMSException;
  * @author sealll
  * @time 2021/5/17 11:12
  */
+@Aspect
 public class PickTimeToMessage {
    @Autowired
    private Message2Converter message2Converter;
@@ -27,7 +29,7 @@ public class PickTimeToMessage {
 
     @Pointcut("execution(public * com.sealll.application.reply.controller.ReplyController.addReply(..))")
     public void pointcut1(){}
-    @Pointcut("execution(public * com.sealll.application.role.controller.RoleController.getRole(com.sealll.application.role.bean.Role))")
+    @Pointcut("execution(public * com.sealll.application.role.controller.RoleController.addRole(com.sealll.application.role.bean.Role))")
     public void pointcut2(){}
     @Pointcut("execution(public * com.sealll.application.sub.controller.SubscribeController.addSub(..))")
     public void pointcut3(){}
@@ -44,7 +46,7 @@ public class PickTimeToMessage {
 
     @AfterReturning(value="pointcut2()",returning="msg")
     public void cutRole(JoinPoint joinPoint,Msg msg) throws JMSException {
-        System.out.println("==========point1");
+        System.out.println("==========point2");
         if(msg.getErrno() == 0){
             Object[] args = joinPoint.getArgs();
             Role arg = (Role)args[0];
@@ -54,7 +56,7 @@ public class PickTimeToMessage {
     }
     @AfterReturning(value="pointcut3()",returning="msg")
     public void cutSub(JoinPoint joinPoint,Msg msg) throws JMSException {
-        System.out.println("==========point1");
+        System.out.println("==========point3");
         if(msg.getErrno() == 0){
             Object[] args = joinPoint.getArgs();
             String subber = (String)args[0];

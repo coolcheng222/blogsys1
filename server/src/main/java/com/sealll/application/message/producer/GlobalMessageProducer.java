@@ -1,5 +1,7 @@
 package com.sealll.application.message.producer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sealll.application.message.bean.Message2;
 import com.sealll.application.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +20,32 @@ public class GlobalMessageProducer {
     @Autowired
     private MessageService messageService;
 
-    private Connection connection = connectionFactory.createConnection();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public GlobalMessageProducer() throws JMSException {
     }
 
     public boolean produceMessage(Message2 message2) throws JMSException {
+        Connection connection = connectionFactory.createConnection();
+        connection.setClientID(message2.getUid());
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         Queue queue = session.createQueue(message2.getUid());
         MessageProducer producer = session.createProducer(queue);
-        ObjectMessage message = session.createObjectMessage(message2);
+        producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+        connection.start();
+        TextMessage message = null;
+        try {
+            message = session.createTextMessage(
+                    objectMapper.writeValueAsString(message2)
+            );
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         producer.send(message);
+        messageService.addMessage(message2);
         session.close();
+        connection.close();
         return true;
     }
 }

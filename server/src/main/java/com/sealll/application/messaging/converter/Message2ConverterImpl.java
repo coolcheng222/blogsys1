@@ -37,11 +37,16 @@ public class Message2ConverterImpl implements Message2Converter {
         if(post != null & byUid != null){
 
             Message2 message2 = new Message2();
-            message2.setUid(post.getUid());
-            message2.setMtitle("您的文章" + "<b>"+post.getTitle()+"</b>被 "+byUid.getUsername()+" 回复了");
-            message2.setContent(reply.getContent());
-            message2.setTime(new Date());
-            return message2;
+            message2.setUid(post.getAuthor().getUid());
+            if(!post.getAuthor().getUid().equals(byUid.getUid())){
+                message2.setMtitle("您的文章" + "<b>"+post.getTitle()+"</b>被 "+byUid.getUsername()+" 回复了");
+                message2.setContent(reply.getContent());
+                message2.setTime(new Date());
+                return message2;
+            }else{
+                return null;
+            }
+
         }
         return null;
     }
@@ -73,7 +78,7 @@ public class Message2ConverterImpl implements Message2Converter {
         user.setUid(subber);
         User byUid = userService.getByUid(user);
         if(byUid != null){
-            message2.setMtitle("您被 "+ byUid.getUsername() +" 关注了");
+            message2.setMtitle("您被 <b>"+ byUid.getUsername() +"</b> 关注了");
             message2.setContent("");
             message2.setTime(new Date());
             return message2;

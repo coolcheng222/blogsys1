@@ -147,7 +147,7 @@
     -->
     insert into User (uid, username, password, 
       reg_time, email)
-    values (#{uid,jdbcType=CHAR}, #{username,jdbcType=CHAR}, #{password,jdbcType=CHAR}, 
+    values ('', #{username,jdbcType=CHAR}, #{password,jdbcType=CHAR},
       #{regTime,jdbcType=TIMESTAMP}, #{email,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sealll.application.user.bean.User">
@@ -158,9 +158,7 @@
     -->
     insert into User
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="uid != null">
         uid,
-      </if>
       <if test="username != null">
         username,
       </if>
@@ -175,9 +173,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="uid != null">
-        #{uid,jdbcType=CHAR},
-      </if>
+        '',
       <if test="username != null">
         #{username,jdbcType=CHAR},
       </if>

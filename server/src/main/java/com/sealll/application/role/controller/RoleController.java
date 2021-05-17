@@ -36,7 +36,7 @@ public class RoleController {
     }
 //    public boolean updateRole(Role role);
     @PostMapping
-    public Msg getRole(@RequestBody Role role){
+    public Msg addRole(@RequestBody Role role){
         boolean b = roleService.updateRole(role);
         if(b){
             return Msg.success("修改成功");

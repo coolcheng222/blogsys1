@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.jms.JMSException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class MessagingController {
     @Autowired
     private MessagingService messagingService;
     @GetMapping("/count/{uid}")
-    public Msg getCount(@PathVariable("uid")String uid){
+    public Msg getCount(@PathVariable("uid")String uid) throws JMSException {
         boolean check = SelfChecker.check(uid);
         if(!check){
             return Msg.permit("没有权限");
@@ -34,11 +35,11 @@ public class MessagingController {
         Integer res = messagingService.getCount(uid);
         HashMap<String, Object> map = new HashMap<>();
         map.put("count", res);
-        return Msg.success("map");
+        return Msg.success("").extend(map);
     }
 
     @GetMapping("/{uid}")
-    public Msg getUnread(@PathVariable("uid") String uid){
+    public Msg getUnread(@PathVariable("uid") String uid) throws JMSException {
         boolean check = SelfChecker.check(uid);
         if(!check){
             return Msg.permit("没有权限");
