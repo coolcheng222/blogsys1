@@ -4,6 +4,7 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.sealll.shiro.filter.JedisCloserFilter;
 import com.sealll.application.user.interceptor.CorsFilter;
+import org.apache.shiro.session.SessionListener;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
@@ -23,7 +24,6 @@ public class BlogWebAppInitializer extends AbstractAnnotationConfigDispatcherSer
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{SpringConfig.class};
     }
-
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{WebConfig.class};

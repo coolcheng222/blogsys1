@@ -17,4 +17,5 @@ public interface UserService {
     public User getByUsername(User user);
 
     //
+    public User getByUid(User user);
 }

@@ -47,7 +47,9 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
+import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
 import javax.servlet.Filter;
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -103,9 +105,7 @@ public class SpringConfig {
 
     @Bean
     public ConnectionFactory connectionFactory(){
-        PooledConnectionFactory factory = new PooledConnectionFactory();
-        factory.setConnectionFactory(new ActiveMQConnectionFactory(environment.getProperty("active.url")));
-        return factory;
+        return new ActiveMQConnectionFactory(environment.getProperty("active.username"),environment.getProperty("active.password"),environment.getProperty("active.url"));
     }
 
     @Configuration
@@ -324,6 +324,20 @@ public class SpringConfig {
             jmsTemplate.setMessageConverter(new SimpleMessageConverter());
             return jmsTemplate;
         }
+
+        @Bean
+        @Scope("prototype")
+        public Connection connection(ConnectionFactory connectionFactory) throws JMSException {
+            Connection connection = connectionFactory.createConnection();
+//            System.out.println(connection.hashCode());
+            return connection;
+        }
+
+        @Bean
+        public Map<String,Connection> connectionMap(){
+            return new HashMap<>();
+        }
+
     }
 
 }
