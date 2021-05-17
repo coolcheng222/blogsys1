@@ -3,6 +3,7 @@ package com.sealll.config;
 import com.sealll.application.history.aop.PostAspect;
 import com.sealll.application.history.aop.SearchAspect;
 import com.sealll.application.messaging.aop.PickTimeToMessage;
+import com.sealll.application.topic.aop.SubscribeAspect;
 import org.springframework.context.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.*;
@@ -53,5 +54,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public PickTimeToMessage pickTimeToMessage(){
         return new PickTimeToMessage();
+    }
+
+    @Bean
+    public SubscribeAspect subscribeAspect(){
+        return new SubscribeAspect();
     }
 }

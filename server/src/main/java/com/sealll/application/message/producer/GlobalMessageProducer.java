@@ -46,6 +46,7 @@ public class GlobalMessageProducer {
         messageService.addMessage(message2);
         session.close();
         connection.close();
+        producer.close();
         return true;
     }
 }
