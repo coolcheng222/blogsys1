@@ -9,7 +9,7 @@
                     :show-close="false"
                     :close-on-press-escape="false"
             >
-                <div>登录中...</div>
+                <div><i class="el-icon-loading"/><br> 登录中...</div>
 <!--                <el-progress v-if="visible" :percentage="40" :format="()=>''" :indeterminate="true"></el-progress>-->
             </el-dialog>
             <el-form @submit.prevent label-position="left" label-width="70px">

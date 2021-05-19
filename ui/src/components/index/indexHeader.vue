@@ -1,66 +1,71 @@
 <template>
+    <el-affix :offset="0">
+        <div class="header">
+            <ul class="nav">
+                <el-row>
+                    <el-col :span="3">
+                        <li>
+                            <router-link to="/index" :class="'aaa'"><img style="height: 60px" src="@/assets/logo2.png">
+                            </router-link>
+                        </li>
+                    </el-col>
+                    <el-col :span="14"></el-col>
+                    <el-col :span="3">
+                        <div class="wrap">
+                            <el-input size="large" v-model="search" placeholder="搜索tag/博客/用户"></el-input>
+                            <el-button type="primary" round><i class="el-icon-search"></i></el-button>
+                        </div>
+                    </el-col>
+                    <template v-if="!isLogin">
+                        <el-col :span="2"></el-col>
+                        <el-col :span="1">
+                            <li class="hov" @click="toLogin">
+                                <router-link to="#">登录</router-link>
+                            </li>
+                        </el-col>
+                        <el-col :span="1">
+                            <li class="hov" @click="$router.push('/register')">
+                                <router-link to="#">注册</router-link>
+                            </li>
+                        </el-col>
+                    </template>
+                    <template v-else>
+                        <el-col :span="4">
 
-    <ul class="nav">
-        <el-row>
-            <el-col :span="3">
-                <li>
-                    <router-link to="/index" :class="'aaa'"><img style="height: 60px" src="@/assets/logo2.png">
-                    </router-link>
-                </li>
-            </el-col>
-            <el-col :span="14"></el-col>
-            <el-col :span="3">
-                <div class="wrap">
-                    <el-input size="large" v-model="search" placeholder="搜索tag/博客/用户"></el-input>
-                    <el-button type="primary" round><i class="el-icon-search"></i></el-button>
-                </div>
-            </el-col>
-            <template v-if="!isLogin">
-                <el-col :span="2"></el-col>
-                <el-col :span="1">
-                    <li class="hov" @click="toLogin">
-                        <router-link to="#">登录</router-link>
-                    </li>
-                </el-col>
-                <el-col :span="1">
-                    <li class="hov" @click="$router.push('/register')">
-                        <router-link to="#">注册</router-link>
-                    </li>
-                </el-col>
-            </template>
-            <template v-else>
-                <el-col :span="4">
 
+                            <el-popover trigger="hover" placement="bottom-end">
+                                    <user-info1></user-info1>
+                                <template #reference>
+                                    <li class="user">{{username}}<i class="el-icon-arrow-down"></i></li>
+                                </template>
+                            </el-popover>
+                            <!--                    <div><a href="#" @click="logout">登出</a></div>-->
+                        </el-col>
+                    </template>
+                </el-row>
 
-                    <el-popover trigger="hover" placement="bottom-end">
-                        <el-menu>
-                            <el-menu-item>个人中心</el-menu-item>
-                            <el-menu-item @click="logout">登出</el-menu-item>
-                        </el-menu>
-                        <template #reference>
-                            <li class="user">{{username}}<i class="el-icon-arrow-down"></i></li>
-                        </template>
-                    </el-popover>
-                    <!--                    <div><a href="#" @click="logout">登出</a></div>-->
-                </el-col>
-            </template>
-        </el-row>
+            </ul>
+        </div>
 
-    </ul>
-
+    </el-affix>
 
 </template>
 
 <script>
     import {mapState} from "vuex";
     import axios from '@/global/axiosConfig.js';
+    import UserInfo1 from "../user/info/UserInfo1";
 
     export default {
         name: "indexHeader",
+        components: {UserInfo1},
         data() {
             return {
                 search: ''
             }
+        },
+        mounted() {
+
         },
         methods: {
             toLogin() {
@@ -158,17 +163,25 @@
         top: -5%;
         left: 0;
     }
-    .user{
+
+    .user {
         font-size: 16px;
-        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
     }
-    .el-menu{
+
+    .el-menu {
         border-right: none;
     }
-    .el-popover{
+
+    .el-popover {
         background-color: #000;
     }
-    .el-popover .el-menu-item{
+
+    .el-popover .el-menu-item {
         text-align: center;
+    }
+
+    .header {
+        /*position: fixed;*/
     }
 </style>

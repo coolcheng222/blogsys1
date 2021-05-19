@@ -35,6 +35,26 @@ export class Post{
     time
     title
     uid
+    faved
+    reply
+}
+export class Reply{
+    reid;
+    post;
+    user;
+    content;
+    time;
+    stars;
+    stared;
+}
+
+export class UserInfo{
+    posts
+    rolename
+    subbed
+    subing
+    uid
+    username
 }
 
 export function dateFormat(fmt, date1) {
