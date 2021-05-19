@@ -171,7 +171,7 @@
                             },50);
                             return Promise.resolve(data.data);
                         }
-                    },error => error.toString())
+                    },error => Promise.reject(error.toString()))
                     .then(() =>{
                             let interval2 = window.setInterval(()=>{
                                 if(this.progress < 100){
@@ -186,6 +186,7 @@
                         // console.log(data.message);
                             // this.$router.push(data.message);
                     },error =>{
+                        console.log(error)
                             this.completed = true;
                             this.message = error;
                             this.key++;

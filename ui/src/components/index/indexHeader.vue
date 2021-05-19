@@ -1,20 +1,25 @@
 <template>
+    <!--disable-eslint-->
     <el-affix :offset="0">
         <div class="header">
             <ul class="nav">
-                <el-row>
+                <el-row >
                     <el-col :span="3">
-                        <li>
-                            <router-link to="/index" :class="'aaa'"><img style="height: 60px" src="@/assets/logo2.png">
-                            </router-link>
-                        </li>
+                        <logo @toggle="toggle" :showing="showing"></logo>
                     </el-col>
-                    <el-col :span="14"></el-col>
+                    <el-col :span="14">
+
+                            <transition name="some">
+                                <div v-if="showing">
+                                        <div class="navnav"><router-link to="/index">主页</router-link></div>
+                                        <div class="navnav"><router-link to="/hot">热门</router-link></div>
+                                </div>
+
+                            </transition>
+
+                    </el-col>
                     <el-col :span="3">
-                        <div class="wrap">
-                            <el-input size="large" v-model="search" placeholder="搜索tag/博客/用户"></el-input>
-                            <el-button type="primary" round><i class="el-icon-search"></i></el-button>
-                        </div>
+                        <searchbox></searchbox>
                     </el-col>
                     <template v-if="!isLogin">
                         <el-col :span="2"></el-col>
@@ -33,7 +38,7 @@
                         <el-col :span="4">
 
 
-                            <el-popover trigger="hover" placement="bottom-end">
+                            <el-popover trigger="hover" popper-class="userpop" placement="bottom-end" :width="240">
                                     <user-info1></user-info1>
                                 <template #reference>
                                     <li class="user">{{username}}<i class="el-icon-arrow-down"></i></li>
@@ -53,15 +58,18 @@
 
 <script>
     import {mapState} from "vuex";
-    import axios from '@/global/axiosConfig.js';
     import UserInfo1 from "../user/info/UserInfo1";
+    import Searchbox from "./searchbox";
+    import Logo from "./logo";
+
 
     export default {
         name: "indexHeader",
-        components: {UserInfo1},
+        // eslint-disable-next-line vue/no-unused-components
+        components: {Logo, Searchbox, UserInfo1},
         data() {
             return {
-                search: ''
+                showing: false
             }
         },
         mounted() {
@@ -71,13 +79,11 @@
             toLogin() {
                 this.$router.push("/login");
             }, logout() {
-                axios.post('logout')
-                    .then(data => {
-                        console.log(data);
-                    }, error => {
-                        console.log(error);
-                    });
+
                 this.$store.dispatch('logout');
+            },
+            toggle(){
+                this.showing = !this.showing
             }
         }, computed: {
             ...mapState({
@@ -123,32 +129,12 @@
         border: none;
     }
 
-    .wrap {
-        background: rgba(255, 255, 255, 0.4);
-        position: absolute;
-        top: 32%;
-        left: 64%;
-        transform: translate(-50%, -50%);
-        -webkit-transform: translate(-50%, -50%);
-        -moz-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        -o-transform: translate(-50%, -50%);
-        width: 420px;
-        height: 44px;
-        border-radius: 24px;
-    }
 
     .el-input {
         width: 70%;
     }
 
-    .el-button {
-        margin: 8px 0;
-        float: right;
-        position: absolute;
-        top: -12%;
-        left: 84%;
-    }
+
 
     .hov:hover {
         background-color: #eff5bb;
@@ -164,6 +150,7 @@
         left: 0;
     }
 
+
     .user {
         font-size: 16px;
         font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
@@ -173,15 +160,51 @@
         border-right: none;
     }
 
-    .el-popover {
+    .el-popover >>> .is-light{
         background-color: #000;
+        padding: 0
     }
 
-    .el-popover .el-menu-item {
-        text-align: center;
-    }
+    /*.el-popover .el-menu-item {*/
+    /*    text-align: center;*/
+    /*}*/
 
     .header {
         /*position: fixed;*/
     }
+    .navnav{
+        height: 42px;
+        float: left;
+        width: 50px;
+        text-decoration: none;
+        margin-top: 8px;
+    }
+    .navnav a{
+        text-decoration: none;
+        color: black;
+        line-height: 50px;
+        border-bottom: 3px solid darkseagreen;
+        font-size: 17px;
+    }
+    .navnav a:hover{
+        border-bottom: 3px solid yellowgreen;
+        color: red;
+    }
+    .el-row{
+        height: 50px;
+    }
+    .some-enter-active {
+        transition: all .3s ease-out;
+    }
+
+    .some-leave-active {
+        transition: all .3s cubic-bezier(0.8, 0.5, 1.0, 1.0);
+    }
+
+    .some-enter-from,
+    .some-leave-to {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
 </style>

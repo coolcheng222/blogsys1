@@ -49,4 +49,9 @@
     body{
         background-color: #F6F6F6;
     }
+    .userpop{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        background-color: #f3dbdb !important;
+    }
 </style>

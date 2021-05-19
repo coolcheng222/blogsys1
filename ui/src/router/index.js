@@ -6,6 +6,7 @@ import index from "../components/index/index"
 import Test1 from "../components/test/Test1";
 import indexBody1 from "../components/index/indexBody1";
 import NotFound from "../components/NotFound";
+import writing from "../components/post/posting/writing"
 
 const routes = [
     {
@@ -37,6 +38,11 @@ const routes = [
             path:'default',
             component: indexBody1,
             alias: ''
+        },{
+            name:'write',
+            path:'/post/write',
+            // eslint-disable-next-line no-undef
+            component: writing
         }]
     },
     {name:'test',path:"/test",component: Test1},

@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import qs from "qs";
 import axios from '@/global/axiosConfig.js';
+import {Post} from "../global/clazz";
 
 
 let userModule = {
@@ -48,6 +49,12 @@ let userModule = {
       });
     },
     logout(context){
+      axios.post('logout')
+          .then(data => {
+            console.log(data);
+          }, error => {
+            console.log(error);
+          });
       context.commit('logout');
     }
   }
@@ -74,9 +81,33 @@ let loginPageModule = {
     }
   }
 }
+let draft = {
+  state:{
+    post: new Post(),
+    hasDraft: false
+  },
+  mutations:{
+    save(state,post) {
+      state.post = post;
+      state.hasDraft = true;
+    },
+    clear(state){
+      console.log("aaaaacaaaaa");
+      state.post = new Post();
+      state.hasDraft = false;
+    }
+  },actions:{
+    save(context,post){
+      context.commit('save',post);
+    },clear(context){
+      context.commit('clear');
+    }
+  }
+}
 export default createStore({
   modules: {
     user: userModule,
-    loginPage: loginPageModule
+    loginPage: loginPageModule,
+    draft
   }
 })

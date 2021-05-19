@@ -81,7 +81,7 @@
         margin-right: 21px;
     }
     .infinite-list  .infinit-list-item{
-        height: 100px;
+        height: 110px;
         padding: 10px;
         border-bottom: 1px solid #E7E7E7;
         background-color: #fff;

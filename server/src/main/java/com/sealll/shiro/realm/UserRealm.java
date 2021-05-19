@@ -12,6 +12,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -30,24 +31,46 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String s = (String) principalCollection.getPrimaryPrincipal();
         Role role = roleService.getRole(s);
-        SecurityUtils.getSubject().getSession().setAttribute(ParameterConstants.ROLEATTR,role);
-        AuthorizationInfo authorizationInfo = new AuthorizationInfo() {
-            @Override
-            public Collection<String> getRoles() {
-                return Arrays.asList(role.getRole());
-            }
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            SecurityUtils.getSubject().getSession().setAttribute(ParameterConstants.ROLEATTR,role);
+            AuthorizationInfo authorizationInfo = new AuthorizationInfo() {
+                @Override
+                public Collection<String> getRoles() {
+                    return Arrays.asList(role.getRole());
+                }
 
-            @Override
-            public Collection<String> getStringPermissions() {
-                return null;
-            }
+                @Override
+                public Collection<String> getStringPermissions() {
+                    return null;
+                }
 
-            @Override
-            public Collection<Permission> getObjectPermissions() {
-                return null;
-            }
-        };
-        return authorizationInfo;
+                @Override
+                public Collection<Permission> getObjectPermissions() {
+                    return null;
+                }
+            };
+            return authorizationInfo;
+        }else{
+            return new AuthorizationInfo() {
+                @Override
+                public Collection<String> getRoles() {
+                    return null;
+                }
+
+                @Override
+                public Collection<String> getStringPermissions() {
+                    return null;
+                }
+
+                @Override
+                public Collection<Permission> getObjectPermissions() {
+                    return null;
+                }
+            };
+        }
+
+
     }
 
     @Override

@@ -23,6 +23,9 @@
 <script>
     export default {
         name: "impropt",
+        emits:[
+            'finish'
+        ],
         props:[
             'dialogVisible',
             'completed',

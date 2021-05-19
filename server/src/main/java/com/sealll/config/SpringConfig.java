@@ -1,5 +1,6 @@
 package com.sealll.config;
 
+import org.apache.shiro.web.servlet.SimpleCookie;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInterceptor;
@@ -243,6 +244,7 @@ public class SpringConfig {
         @Bean
         public SessionManager sessionManager(){
             DefaultWebSessionManager manager = new DefaultWebSessionManager();
+            manager.setSessionIdCookie(new SimpleCookie("sessionId"));
             manager.getSessionIdCookie().setPath("/");
 //            manager.setSessionDAO(redisSessionDAO());
             manager.setCacheManager(redisCacheManager());

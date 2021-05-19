@@ -45,7 +45,8 @@
                         this.loaded = true;
                         return data.data;
                     }
-                }
+                },
+                error=>Promise.reject(error.toString())
             ).then(
                 data => {
                     this.replyList = data.extend.list;

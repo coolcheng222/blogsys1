@@ -57,6 +57,13 @@ export class UserInfo{
     username
 }
 
+export class Tag{
+    tag;
+    tagname;
+    posts;
+    list;
+}
+
 export function dateFormat(fmt, date1) {
     let date = new Date(date1);
     let ret;

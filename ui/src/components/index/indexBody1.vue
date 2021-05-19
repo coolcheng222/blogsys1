@@ -9,7 +9,7 @@
                 </el-carousel-item>
             </el-carousel>
             <el-tabs v-model="activeName">
-                <el-tab-pane label="最新文章" name="first">最新文章</el-tab-pane>
+                <el-tab-pane label="最新文章" name="first"></el-tab-pane>
             </el-tabs>
             <blog-list></blog-list>
         </el-col>

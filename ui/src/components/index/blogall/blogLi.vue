@@ -7,9 +7,23 @@
                 <el-header height="10px"><h3>{{item.title}}</h3></el-header>
                 <el-main>{{item.description}}</el-main>
                 <el-footer height="5px">
-                    <span class="author">{{item.author.username}}</span>
-                    <span class="time">{{getTime(item.time)}}</span>
-                    <span class="replays" style="color: red"><i class="el-icon-chat-line-round"></i> {{item.reply}}</span>
+                    <div class="tags">
+
+                        标签:
+                        <!-- eslint-disable-->
+                        <template v-if="item.tags.length">
+                            <el-tag effect="plain" size="mini" v-for="tag in item.tags">{{tag.tagname}}</el-tag>
+                        </template>
+                        <template v-else>
+                            无
+                        </template>
+                    </div>
+                    <div>
+                        <span class="author">{{item.author.username}}</span>
+                        <span class="time">{{getTime(item.time)}}</span>
+                        <span class="replays" style="color: red"><i class="el-icon-chat-line-round"></i> {{item.reply}}</span>
+                    </div>
+
                 </el-footer>
             </el-container>
         </el-container>
@@ -65,5 +79,17 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    .el-tag{
+        margin-left: 2px;
+    }
+    .tags{
+        margin-bottom:7px;
+    }
+    .author{
+        color: forestgreen;
+    }
+    .time{
+        color: #ada5a5;
     }
 </style>
