@@ -7,6 +7,8 @@ import Test1 from "../components/test/Test1";
 import indexBody1 from "../components/index/indexBody1";
 import NotFound from "../components/NotFound";
 import writing from "../components/post/posting/writing"
+import article from '../components/post/singlepost/Article2'
+import Personal from '../components/personal/Personal'
 
 const routes = [
     {
@@ -29,23 +31,24 @@ const routes = [
         ]
     },
     {
-        name:'index',
-        path:'/index',
+        name: 'index',
+        path: '/index',
         component: index,
         alias: '/',
         children: [{
             name: 'defaultIndex',
-            path:'default',
+            path: 'default',
             component: indexBody1,
             alias: ''
-        },{
-            name:'write',
-            path:'/post/write',
+        }, {
+            name: 'write',
+            path: '/post/write',
             // eslint-disable-next-line no-undef
             component: writing
-        }]
+        }, {name: 'post', path: '/post/:pid', props: true, component: article},
+            {name: 'personal',path: '/user/:uid',props: true,component: Personal}]
     },
-    {name:'test',path:"/test",component: Test1},
+    {name: 'test', path: "/test", component: Test1},
     {
         name: 'notFound',
         path: '/:path(.*)*',
@@ -58,7 +61,6 @@ const router = createRouter({
     history: createWebHistory("/blogui"),
     routes
 })
-
 
 
 export default router

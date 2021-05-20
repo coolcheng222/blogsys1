@@ -3,7 +3,7 @@
         <el-aside width="20px"><i :class="icon[trueIndex]"></i></el-aside>
         <el-main>
             <div class="content">{{item.content}}</div>
-            <div class="title">文章: {{item.post.title}}</div>
+            <div class="title" @click="$router.push(`/post/${item.post.pId}`)">文章: {{item.post.title}}</div>
         </el-main>
     </el-container>
 
@@ -61,5 +61,9 @@
         padding-top: 10px;
         padding-bottom: 10px;
         height: 60px;
+    }
+    .title:hover {
+        text-decoration: underline;
+        cursor: pointer;
     }
 </style>

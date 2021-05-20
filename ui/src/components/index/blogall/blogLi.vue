@@ -4,8 +4,8 @@
         <el-aside width="40px"><i class="el-icon-star-on" />{{item.faved}}</el-aside>
         <el-container>
             <el-container>
-                <el-header height="10px"><h3>{{item.title}}</h3></el-header>
-                <el-main>{{item.description}}</el-main>
+                <el-header height="10px" @click="$router.push(`/post/${item.pId}`)"><h3>{{item.title}}</h3></el-header>
+                <el-main @click="$router.push(`/post/${item.pId}`)">{{item.description}}</el-main>
                 <el-footer height="5px">
                     <div class="tags">
 
@@ -19,7 +19,7 @@
                         </template>
                     </div>
                     <div>
-                        <span class="author">{{item.author.username}}</span>
+                        <span class="author" @click="$router.push(`/user/${item.author.uid}`)">{{item.author.username}}</span>
                         <span class="time">{{getTime(item.time)}}</span>
                         <span class="replays" style="color: red"><i class="el-icon-chat-line-round"></i> {{item.reply}}</span>
                     </div>
@@ -88,6 +88,10 @@
     }
     .author{
         color: forestgreen;
+    }
+    .author:hover{
+        cursor: pointer;
+        text-decoration: underline;
     }
     .time{
         color: #ada5a5;

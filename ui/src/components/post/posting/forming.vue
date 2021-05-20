@@ -1,5 +1,15 @@
 <template>
     <div class="forming">
+        <el-dialog
+                v-model="visible2"
+                width="10%"
+                :close-on-click-modal="false"
+                :show-close="false"
+                :close-on-press-escape="false"
+        >
+            <div style="text-align: center"><i class="el-icon-loading"/><br> 发布中...</div>
+            <!--                <el-progress v-if="visible" :percentage="40" :format="()=>''" :indeterminate="true"></el-progress>-->
+        </el-dialog>
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="文章信息" name="info"></el-tab-pane>
             <el-tab-pane label="文章内容" name="content"></el-tab-pane>
@@ -20,39 +30,45 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="文章标签">
-                    <div class="title">
-                        <div class="tags">
+                <template v-if="!put">
 
-                            <el-popover
-                                    placement="bottom"
-                                    :width="200"
-                                    trigger="manual"
-                                    v-model:visible="visible"
-                            >
-                                <template v-if="autocompleteList.length && post.tags.size < 5">
-                                    <div class="autoc" @click="addTag(tag1)" v-for="(tag1,index) in autocompleteList">
-                                        {{tag1.tagname}}
-                                    </div>
-                                </template>
-                                <template v-else-if="autocompleteList.length === 0">
-                                    <div class="autoc">搜索中或者没有对应标签</div>
-                                </template>
-                                <template v-else>
-                                    <div class="autoc">最多五个标签</div>
-                                </template>
-                                <template #reference>
-                                    <el-input placeholder="搜索标签" v-model="tagsear" @input="changing" @focus="focus"
-                                              @blur="(visible=false)"></el-input>
-                                </template>
-                            </el-popover>
-                            <el-tag type="success" @close="delTag(tag)" closable v-for="(tag,index) in post.tags">
-                                {{tag.tagname}}
-                            </el-tag>
+                    <el-form-item label="文章标签">
+                        <div class="title">
+                            <div class="tags">
 
+                                <el-popover
+                                        placement="bottom"
+                                        :width="200"
+                                        trigger="manual"
+                                        v-model:visible="visible"
+                                >
+                                    <template v-if="autocompleteList.length && post.tags.size < 5">
+                                        <div class="autoc" @click="addTag(tag1)" v-for="(tag1,index) in autocompleteList">
+                                            {{tag1.tagname}}
+                                        </div>
+                                    </template>
+                                    <template v-else-if="autocompleteList.length === 0">
+                                        <div class="autoc">搜索中或者没有对应标签</div>
+                                    </template>
+                                    <template v-else-if="post.tags.size > 5">
+                                        <div class="autoc">最多五个标签</div>
+                                    </template>
+                                    <template #reference>
+                                        <el-input placeholder="搜索标签" v-model="tagsear" @input="changing" @focus="focus"
+                                                  @blur="(visible=false)"></el-input>
+                                    </template>
+                                </el-popover>
+                                <el-tag type="success" @close="delTag(tag)" closable v-for="(tag,index) in post.tags">
+                                    {{tag.tagname}}
+                                </el-tag>
+
+                            </div>
                         </div>
-                    </div>
-                </el-form-item>
+                    </el-form-item>
+                </template>
+                <template v-else>
+                    &nbsp;&nbsp;<span>不允许修改标签</span>
+                </template>
             </el-form>
         </template>
         <template v-else-if="activeName === 'content'">
@@ -77,34 +93,43 @@
             </el-form>
         </template>
         <template v-else>
-            <el-button type="primary">提交文章</el-button>
+            <el-button type="primary" @click="submiting">提交文章</el-button>
         </template>
     </div>
 </template>
 
 <script>
+    //eslint-disable
     import {Post} from "../../../global/clazz";
     import axios, {CancelToken} from "axios";
-    import store from '../../../store/index';
+    // import store from '../../../store/index';
 
+    var c;
     export default {
         name: "forming",
+        props:['put'],
         data() {
             return {
                 post: new Post(),
                 autocompleteList: [],
                 visible: false,
+                visible2: false,
                 tagsear: '',
                 searchSet: new Set(),
                 tagSet: new Set(),
                 activeName: 'info'
             }
         },
-        beforeRouteEnter() {
-            console.log(store);
+        beforeUnmount(){
+            console.log("aaa");
+            this.$store.dispatch('save',this.post);
         },
         mounted() {
-            this.post.tags = new Set();
+            // this.post.tags = new Set();
+            if(this.$store.state.draft.hasDraft){
+                this.post = this.$store.state.draft.post;
+                console.log("bbb")
+            }
         },
         methods: {
             getTags() {
@@ -152,7 +177,6 @@
             },
             changing() {
                 // console.log("cccccccccccccccccc")
-                var c;
                 if (c && c instanceof Function) {
                     c();
                 }
@@ -199,6 +223,47 @@
             delTag(tag) {
                 this.post.tags.delete(tag);
                 this.tagSet.delete(tag.tag);
+            },
+            submiting(){
+                this.visible2 = true;
+                if(!(this.$store.state.user.isLogin)){
+                    alert("必须登录");
+                    this.$store.dispatch("toLogin",this.$route.fullPath);
+                    this.$router.push('/login');
+                    this.visible2 = false;
+                }
+                this.post.tags = [...this.post.tags];
+                this.post.uid = this.$store.state.user.uid;
+                let promise;
+                if(this.put){
+                    promise = axios.put('/post',this.post);
+                }else{
+                    promise = axios.post('/post',this.post);
+
+                }
+                promise.then(data=>{
+                    if(data.data.errno === 0){
+                        return data.data
+                    }else{
+                        return Promise.reject(data.data.message);
+                    }
+                },error=>Promise.reject(error.toString())).then(
+                    data=>{
+                        this.$store.dispatch('clear');
+                        if(this.put){
+
+                            this.$router.push(`/post/${this.post.pId}`);
+                        }else{
+                            this.$router.push(`/post/${data.extend}`)
+                        }
+                    },error=>{
+                        console.log(error);
+                    }
+                ).finally(
+                    ()=>{
+                        this.visible2 = false;
+                    }
+                )
             }
         }
     }
@@ -208,6 +273,7 @@
     .forming {
         border-right: 2px solid gray;
         border-left: 2px solid gray;
+        border-bottom: 3px solid gold;
         padding-left: 20px;
         padding-right: 20px;
         padding-top: 30px;

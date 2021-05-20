@@ -1,5 +1,6 @@
 package com.sealll.application.post.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.sealll.application.post.bean.Post;
 import com.sealll.application.post.service.PostService;
@@ -103,15 +104,20 @@ public class PostController {
         }
     }
 
+//    @Autowired
+//    private ObjectMapper objectMapper;
 
     @PostMapping
     public Msg addPost(@RequestBody Post post) {
+//        System.out.println(objectMapper.writeValueAsString(post));
         String uid = post.getUid();
         Object o = SecurityUtils.getSubject().getSession().getAttribute(ParameterConstants.UID_SESSION_KEY);
+        System.out.println(o);
         if(o == null){
             return Msg.auth("先登录");
         }else{
-            if(!((String)o).equals(uid)){
+            if(! o.toString().equals(uid)){
+                System.out.println(uid);
                 return Msg.permit("没有权限");
             }
         }

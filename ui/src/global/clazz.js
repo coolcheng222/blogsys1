@@ -1,4 +1,4 @@
-export class User{
+export class User {
     uid = null;
     username = null;
     password = null;
@@ -6,7 +6,7 @@ export class User{
     kaptcha = null;
 }
 
-export class Page{
+export class Page {
     endRow
     hasNextPage
     hasPreviousPage
@@ -26,19 +26,20 @@ export class Page{
     total
 }
 
-export class Post{
+export class Post {
     author
     content
     description
     pId
-    tags
+    tags = new Set()
     time
     title
     uid
     faved
     reply
 }
-export class Reply{
+
+export class Reply {
     reid;
     post;
     user;
@@ -48,7 +49,7 @@ export class Reply{
     stared;
 }
 
-export class UserInfo{
+export class UserInfo {
     posts
     rolename
     subbed
@@ -57,11 +58,28 @@ export class UserInfo{
     username
 }
 
-export class Tag{
+export class Tag {
     tag;
     tagname;
     posts;
     list;
+}
+
+export class Faving {
+    pid;
+    res;
+}
+
+export class Faved {
+    pid;
+    users
+    count
+}
+
+export class Fav{
+    uid;
+    fav;
+    count;
 }
 
 export function dateFormat(fmt, date1) {

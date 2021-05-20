@@ -20,7 +20,7 @@ axios.interceptors.response.use(
     data=>{
         // console.log("拦截拦截")
         // console.log(data);
-        if(data.data.errno == 4) {
+        if(data.data.errno == 3) {
             router.push("/login");
             return Promise.reject("需要登录");
         }

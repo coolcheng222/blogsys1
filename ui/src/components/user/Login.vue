@@ -64,8 +64,9 @@
             }
         }, methods: {
             login() {
-                if(this.$store.state.isLogin){
+                if(this.$store.state.user.isLogin){
                     this.message = "请勿重复登录";
+                    return;
                 }
                 this.message = '';
                 this.visible = true;

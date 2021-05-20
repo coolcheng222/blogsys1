@@ -5,17 +5,18 @@
             <div class="user">{{userinfo.username}}</div>
         </el-header>
         <el-main>
-            <el-row type="flex" class="row-bg" justify="space-around">
-                <el-col :span="6">
-                    <div class="grid-content bg-purple-light"><label>关注:</label><br><b>{{userinfo.subing}}</b></div>
-                </el-col>
-                <el-col :span="6">
-                    <div class="grid-content bg-purple"><label>粉丝:</label><br><b>{{userinfo.subbed}}</b></div>
-                </el-col>
-                <el-col :span="6">
-                    <div class="grid-content bg-purple"><label>文章:</label><br><b>{{userinfo.posts}}</b></div>
-                </el-col>
-            </el-row>
+            <info-bar :userinfo="userinfo"></info-bar>
+<!--            <el-row type="flex" class="row-bg" justify="space-around">-->
+<!--                <el-col :span="6">-->
+<!--                    <div class="grid-content bg-purple-light"><label>关注:</label><br><b>{{userinfo.subing}}</b></div>-->
+<!--                </el-col>-->
+<!--                <el-col :span="6">-->
+<!--                    <div class="grid-content bg-purple"><label>粉丝:</label><br><b>{{userinfo.subbed}}</b></div>-->
+<!--                </el-col>-->
+<!--                <el-col :span="6">-->
+<!--                    <div class="grid-content bg-purple"><label>文章:</label><br><b>{{userinfo.posts}}</b></div>-->
+<!--                </el-col>-->
+<!--            </el-row>-->
             <div class="items"><i class="el-icon-user"></i> 个人中心</div>
             <div class="items"><i class="el-icon-chat-round"></i> 未读消息
                 <div class="unread">{{unread}}</div>
@@ -44,9 +45,11 @@
     import axios from "axios";
     import {mapState} from "vuex";
     import {UserInfo} from "../../../global/clazz";
+    import InfoBar from "./InfoBar";
 
     export default {
         name: "UserInfo1",
+        components: {InfoBar},
         data() {
             return {
                 userinfo: new UserInfo(),
@@ -109,6 +112,7 @@
                 this.$store.dispatch('clear')
                 this.$store.dispatch('logout');
                 this.dialogVisible = true;
+                this.$router.push('/');
                 // window.location.reload();
                 // alert("登出成功");
             },handleClose(){
@@ -133,16 +137,7 @@
         font-size: 20px;
     }
 
-    .grid-content {
-        text-align: center;
-        font-size: 14px;
-        cursor: pointer;
-    }
 
-    .el-row {
-        border-top: 1px solid gainsboro;
-        border-bottom: 1px solid gainsboro;
-    }
 
     .el-header, .el-main {
         padding-right: 0;
@@ -153,10 +148,7 @@
         padding-top: 10px;
     }
 
-    .el-row {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+
 
     .items:hover {
         background-color: #e5d7d7;

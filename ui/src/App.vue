@@ -10,7 +10,7 @@
     export default {
         name: 'App',
         components: {},
-        mounted() {
+        created() {
             // check login
             axios({
                 url:'/login',
@@ -18,6 +18,11 @@
             }).then(data=>{
                 if(data.data.errno === 0){
                     this.$store.dispatch('login',data.data.extend);
+                    // this.$router.go(0);
+                    let b = /login|register/.test(this.$route.fullPath);
+                    if(b){
+                        this.$router.push(this.$store.state.loginPage.beforePath);
+                    }
                 }
             });
             // $router
@@ -29,7 +34,8 @@
         },
         computed:{
             ...mapState({
-                beforePath:'beforePath'
+                beforePath: state=>state.loginPage.beforePath,
+                isLogin: state=>state.user.isLogin
             })
         }
     }
@@ -47,7 +53,7 @@
         /*margin-top: 60px;*/
     }
     body{
-        background-color: #F6F6F6;
+        background-color: #EAEAEA;
     }
     .userpop{
         padding-left: 0 !important;

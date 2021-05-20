@@ -27,6 +27,9 @@ public class GlobalMessageProducer {
     }
 
     public boolean produceMessage(Message2 message2) throws JMSException {
+        if(message2 == null){
+            return false;
+        }
         Connection connection = connectionFactory.createConnection();
         connection.setClientID(message2.getUid());
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

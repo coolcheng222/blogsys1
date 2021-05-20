@@ -45,7 +45,8 @@
                     url: `/post`,
                     params:{
                         before: this.time,
-                        page: n
+                        page: n,
+                        asc: "false"
                     }
                 }).then(data=>{
                     console.log(data);

@@ -1,11 +1,11 @@
 <template>
     <div class="writing">
         <el-row>
-            <el-col :span="6"></el-col>
-            <el-col :span="12">
-                <forming></forming>
+            <el-col :span="5"></el-col>
+            <el-col :span="14">
+                <forming :put="put"></forming>
             </el-col>
-            <el-col :span="6"></el-col>
+            <el-col :span="5"></el-col>
         </el-row>
     </div>
 
@@ -20,6 +20,16 @@
             return{
                 tabPosition: 'right'
             }
+        },
+        mounted() {
+            if(!this.$store.state.user.isLogin){
+                this.$router.push('/index');
+            }
+        },
+        computed:{
+            put(){
+                return this.$route.query.put;
+            }
         }
     }
 </script>
@@ -28,9 +38,9 @@
     .writing{
         background-image: url("~@/assets/writing.png");
         background-size: cover;
-        height: 91.5%;
+        height: 92.5%;
     }
     .el-row{
-        height: 91.5%;
+        height: 92.5%;
     }
 </style>

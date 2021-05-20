@@ -10,6 +10,11 @@ let userModule = {
     uid: '',
     isLogin: false
   },
+  getters:{
+    logined(state){
+      return state.isLogin;
+    }
+  },
   mutations: {
     login(state,user){
       state.username = user.username;
@@ -94,6 +99,7 @@ let draft = {
     clear(state){
       console.log("aaaaacaaaaa");
       state.post = new Post();
+      state.post.tags = new Set();
       state.hasDraft = false;
     }
   },actions:{

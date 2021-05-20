@@ -19,6 +19,7 @@
 <script>
     import UserHeader from "./UserHeader";
     import {mapState} from "vuex";
+    import store from '../../store/index'
 
     export default {
         name: "User",
@@ -30,7 +31,20 @@
 
             }
         },
+        watch:{
+            isLogin(old,neww){
+                if(neww){
+                    this.$router.push("/index");
+                }
+            }
+        },
         mounted() {
+            console.log(this.isLogin);
+            if(this.isLogin){
+                store.dispatch('fromLogin');
+                console.log("aaaaaaaaaaaaaaaa");
+                this.$router.push('/index');
+            }
             if (this.$route.fullPath.match("login")) {
                 this.theme = "Login";
             } else if (this.$route.fullPath.match("register")) {
@@ -50,13 +64,14 @@
                 return [];
             },
             ...mapState({
-                isLogin: 'isLogin'
+                isLogin: state=>state.user.isLogin
             })
         },
         beforeRouteEnter (to, from, next) {
             next(vm=>{
-                console.log(vm);
-                if(vm.$store.state.isLogin){
+                // vm.$router.push("/index")
+                // console.log(vm.isLogin);
+                if(vm.isLogin){
                     vm.$store.dispatch('fromLogin');
                     vm.$router.push("/index");
                 }
@@ -66,6 +81,7 @@
             // console.log(to);
             if(this.isLogin){
                 this.$store.dispatch('fromLogin',this.$router);
+                this.$router.push("/index");
             }
             if (to.fullPath.match("login")) {
                 this.theme = "Login";
