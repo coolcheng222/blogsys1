@@ -82,6 +82,13 @@ export class Fav{
     count;
 }
 
+export class Stared{
+
+   uid;
+    pid;
+    reid;
+}
+
 export function dateFormat(fmt, date1) {
     let date = new Date(date1);
     let ret;

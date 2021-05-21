@@ -5,9 +5,13 @@
         </el-col>
         <el-col :span="18">
             <single-post :post="post" :loaded="loaded"></single-post>
-            <writereply :post="post" :loaded="loaded"></writereply>
-            <h3 class="reply-com">{{post.reply}} 评论</h3>
-            <replylist :post="post" :loaded="loaded"></replylist>
+            <div class="replys2">
+                <h2 class="reply-com">{{post.reply}} 评论</h2>
+                <writereply :post="post" :loaded="loaded"></writereply>
+                <hr />
+                <replylist :post="post" :loaded="loaded"></replylist>
+            </div>
+
         </el-col>
     </el-row>
 </template>
@@ -32,7 +36,7 @@
                 loaded: false
             }
         },
-        created() {
+        mounted() {
                 axios.get(`/post/${this.$route.params.pid}`).then(
                     data=>{
                         // console.log(data.data)
@@ -56,8 +60,14 @@
 
 <style scoped>
     .reply-com{
-        border-bottom: 1px solid lightseagreen;
-        margin-top: 23px;
-        margin-right: 40px
+        /*border-bottom: 1px solid lightseagreen;*/
+        margin-right: 40px;
+        margin-bottom: 20px;
+    }
+    .replys2{
+        background-color: #fde8e8;
+        margin-right: 40px;
+        padding-top: 20px;
+        padding-left: 20px
     }
 </style>
