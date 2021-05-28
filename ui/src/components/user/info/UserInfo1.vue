@@ -17,7 +17,7 @@
 <!--                    <div class="grid-content bg-purple"><label>文章:</label><br><b>{{userinfo.posts}}</b></div>-->
 <!--                </el-col>-->
 <!--            </el-row>-->
-            <div class="items"><i class="el-icon-user"></i> 个人中心</div>
+            <div class="items" @click="$router.push(`/user/${userinfo.uid}`)"><i class="el-icon-user"></i> 个人中心</div>
             <div class="items"><i class="el-icon-chat-round"></i> 未读消息
                 <div class="unread">{{unread}}</div>
             </div>

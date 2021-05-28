@@ -22,6 +22,7 @@
             }
         },
         mounted() {
+            // console.log(this.$store.state.user.isLogin)
             if(!this.$store.state.user.isLogin){
                 this.$router.push('/index');
             }

@@ -9,6 +9,8 @@ import NotFound from "../components/NotFound";
 import writing from "../components/post/posting/writing"
 import article from '../components/post/singlepost/Article2'
 import Personal from '../components/personal/Personal'
+import SearchResult from '../components/search/SearchResult'
+import indexBody2 from '../components/index/indexBody2'
 
 const routes = [
     {
@@ -46,7 +48,10 @@ const routes = [
             // eslint-disable-next-line no-undef
             component: writing
         }, {name: 'post', path: '/post/:pid', props: true, component: article},
-            {name: 'personal',path: '/user/:uid',props: true,component: Personal}]
+            {name: 'personal',path: '/user/:uid',props: true,component: Personal},
+            {name:'search',path:'/search/:title',props:true,component: SearchResult},
+            {name: 'hot', path:'/hot',props: true,component: indexBody2}
+            ]
     },
     {name: 'test', path: "/test", component: Test1},
     {
@@ -61,6 +66,13 @@ const router = createRouter({
     history: createWebHistory("/blogui"),
     routes
 })
+// router.beforeEach(()=>{
+//     console.log("fffffff")
+// })
+//
+// router.afterEach(()=>{
+//     console.log("eeeeeeeeeee");
+// })
 
 
 export default router

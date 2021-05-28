@@ -26,47 +26,70 @@ public class HistoryMapperImpl implements HistoryMapper {
 
     @Override
     public boolean addSearchHistory(String uid, String content) {
-        Jedis resource = jedisPool.getResource();
-        Pipeline pipelined = resource.pipelined();
-        Response<Long> zadd = pipelined.zadd(ParameterConstants.HISTORYSEARCH + uid, new Date().getTime() + PageConstants.TTL, content);
-        pipelined.zremrangeByScore(ParameterConstants.HISTORYSEARCH + uid,0,new Date().getTime());
-        pipelined.zremrangeByRank(ParameterConstants.HISTORYSEARCH + uid, PageConstants.SEARCHHISTORY,-1);
-        pipelined.sync();
-        Long aLong = zadd.get();
-        return aLong != 0;
+        Jedis resource = null;
+        try {
+            resource = jedisPool.getResource();
+            Pipeline pipelined = resource.pipelined();
+            Response<Long> zadd = pipelined.zadd(ParameterConstants.HISTORYSEARCH + uid, new Date().getTime() + PageConstants.TTL, content);
+            pipelined.zremrangeByScore(ParameterConstants.HISTORYSEARCH + uid, 0, new Date().getTime());
+            pipelined.zremrangeByRank(ParameterConstants.HISTORYSEARCH + uid, PageConstants.SEARCHHISTORY, -1);
+            pipelined.sync();
+            Long aLong = zadd.get();
+            return aLong != 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            resource.close();
+        }
+        return false;
     }
 
     @Override
     public boolean addPostHistory(String uid, String pid) {
-        Jedis resource = jedisPool.getResource();
-        Pipeline pipelined = resource.pipelined();
-        Response<Long> zadd = pipelined.zadd(ParameterConstants.HISTORYREAD + uid, new Date().getTime() + PageConstants.TTL, pid);
-        pipelined.zremrangeByScore(ParameterConstants.HISTORYREAD + uid,0,new Date().getTime());
-        pipelined.zremrangeByRank(ParameterConstants.HISTORYREAD + uid, PageConstants.POSTHISTORY,-1);
-        pipelined.sync();
-        Long aLong = zadd.get();
-        return aLong != 0;
+        Jedis resource = null;
+        try {
+            resource = jedisPool.getResource();
+            Pipeline pipelined = resource.pipelined();
+            Response<Long> zadd = pipelined.zadd(ParameterConstants.HISTORYREAD + uid, new Date().getTime() + PageConstants.TTL, pid);
+            pipelined.zremrangeByScore(ParameterConstants.HISTORYREAD + uid, 0, new Date().getTime());
+            pipelined.zremrangeByRank(ParameterConstants.HISTORYREAD + uid, PageConstants.POSTHISTORY, -1);
+            pipelined.sync();
+            Long aLong = zadd.get();
+            return aLong != 0;
+        } finally {
+            resource.close();
+        }
     }
 
     @Override
     public Set<String> getSearchHistory(String uid) {
-        Jedis resource = jedisPool.getResource();
-        Pipeline pipelined = resource.pipelined();
-        pipelined.zremrangeByScore(ParameterConstants.HISTORYSEARCH + uid,0,new Date().getTime());
-        Response<Set<String>> zrange = pipelined.zrange(ParameterConstants.HISTORYSEARCH + uid, 0, PageConstants.SEARCHHISTORY);
-        pipelined.sync();
-        Set<String> strings = zrange.get();
-        return strings;
+        Jedis resource = null;
+        try {
+            resource = jedisPool.getResource();
+            Pipeline pipelined = resource.pipelined();
+            pipelined.zremrangeByScore(ParameterConstants.HISTORYSEARCH + uid, 0, new Date().getTime());
+            Response<Set<String>> zrange = pipelined.zrange(ParameterConstants.HISTORYSEARCH + uid, 0, PageConstants.SEARCHHISTORY);
+            pipelined.sync();
+            Set<String> strings = zrange.get();
+            return strings;
+        } finally {
+            resource.close();
+        }
     }
 
     @Override
     public Set<String> getPostHistroy(String uid) {
-        Jedis resource = jedisPool.getResource();
-        Pipeline pipelined = resource.pipelined();
-        pipelined.zremrangeByScore(ParameterConstants.HISTORYREAD+ uid,0,new Date().getTime());
-        Response<Set<String>> zrange = pipelined.zrange(ParameterConstants.HISTORYREAD + uid, 0, PageConstants.POSTHISTORY);
-        pipelined.sync();
-        Set<String> strings = zrange.get();
-        return strings;
+        Jedis resource = null;
+        try {
+            resource = jedisPool.getResource();
+            Pipeline pipelined = resource.pipelined();
+            pipelined.zremrangeByScore(ParameterConstants.HISTORYREAD + uid, 0, new Date().getTime());
+            Response<Set<String>> zrange = pipelined.zrange(ParameterConstants.HISTORYREAD + uid, 0, PageConstants.POSTHISTORY);
+            pipelined.sync();
+            Set<String> strings = zrange.get();
+            return strings;
+        } finally {
+            resource.close();
+        }
     }
 }

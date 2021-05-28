@@ -9,7 +9,7 @@
                 </template>
                 <template v-else>
                     <!--eslint-disable-->
-                    &nbsp;<el-tag effect="plain" size="mini" v-for="tag in post.tags">{{tag.tagname}}</el-tag>
+                    &nbsp;<el-tag @click="$router.push(`/tag/${tag.tag}`)" effect="plain" size="mini" v-for="tag in post.tags">{{tag.tagname}}</el-tag>
                 </template>
             </div>
             <div class="tags">
@@ -18,7 +18,7 @@
                     <i @click="toggle" v-else class="el-icon-star-on" style="color: #a0a000"></i>
                     收藏:{{post.faved + favnum}}
                 </span>&nbsp;
-                <span class="author" @click="$router.push(`/user/${post.author.pid}`)">作者: {{post.author.username}}</span>&nbsp;
+                <span class="author" @click="$router.push(`/user/${post.author.uid}`)">作者: {{post.author.username}}</span>&nbsp;
                 <span class="time">发布时间: {{getTime(post.time)}}</span>
             </div>
 

@@ -8,7 +8,7 @@
                     <div class="dec"></div>
                 </el-carousel-item>
             </el-carousel>
-            <el-tabs v-model="activeName">
+            <el-tabs>
                 <el-tab-pane label="最新文章" name="first"></el-tab-pane>
             </el-tabs>
             <blog-list></blog-list>
@@ -31,6 +31,14 @@
             ...mapState({
                 'isLogin': state=>state.user.isLogin
             })
+        },
+        // eslint-disable-next-line no-unused-vars
+        beforeRouteEnter(){
+            console.log("fkkkkkku");
+        },
+        // eslint-disable-next-line no-unused-vars
+        beforeRouteLeave (to, from) {
+            console.log("fku")
         }
     }
 </script>

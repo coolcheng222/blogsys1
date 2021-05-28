@@ -1,27 +1,16 @@
 <template>
-
     <el-container>
-        <el-aside width="40px"><i class="el-icon-star-on" />{{item.faved}}</el-aside>
         <el-container>
             <el-container>
                 <el-header height="10px" @click="$router.push(`/post/${item.pId}`)"><h3>{{item.title}}</h3></el-header>
                 <el-main @click="$router.push(`/post/${item.pId}`)">{{item.description}}</el-main>
                 <el-footer height="5px">
-                    <div class="tags">
-
-                        标签:
-                        <!-- eslint-disable-->
-                        <template v-if="item.tags.length">
-                            <el-tag @click="$router.push(`/tag/${tag.tag}`)" effect="plain" size="mini" v-for="tag in item.tags">{{tag.tagname}}</el-tag>
-                        </template>
-                        <template v-else>
-                            无
-                        </template>
-                    </div>
                     <div>
-                        <span class="author" @click="$router.push(`/user/${item.author.uid}`)">{{item.author.username}}</span>
+                        <span class="author"
+                              @click="$router.push(`/user/${item.author.uid}`)">{{item.author.username}}</span>
                         <span class="time">{{getTime(item.time)}}</span>
                         <span class="replays" style="color: red"><i class="el-icon-chat-line-round"></i> {{item.reply}}</span>
+                        <i class="el-icon-star-on"/>{{item.faved}}
                     </div>
 
                 </el-footer>
@@ -29,13 +18,14 @@
         </el-container>
     </el-container>
 </template>
+
 <script>
     import {dateFormat} from "../../../global/clazz";
 
     export default {
-        name: "blogLi",
-        props:{
-            item:{
+        name: "blogLi2",
+        props: {
+            item: {
                 type: Object
             }
         },
@@ -60,7 +50,7 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         word-break: break-all;
-        height: 58px;
+        height: 23px;
     }
     .author:hover{
         text-decoration: underline;

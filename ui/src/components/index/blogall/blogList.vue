@@ -4,7 +4,7 @@
 
             <!--eslint-disable-next-line-->
             <li class="infinit-list-item" v-for="i in [1,2,3,4,5]">
-                    <el-skeleton :rows="2" animated="true"/>
+                    <el-skeleton :rows="2" :animated="true"/>
             </li>
 
         </template>
@@ -77,6 +77,7 @@
 </script>
 
 <style scoped>
+
     .infinite-list{
         margin-left: 21px;
         margin-right: 21px;
@@ -87,7 +88,6 @@
         border-bottom: 1px solid #E7E7E7;
         background-color: #fff;
     }
-
 
     .el-footer span{
         font-size: 16px;
