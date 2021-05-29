@@ -1,13 +1,12 @@
 <template>
-    <!--eslint-disable-->
     <template v-if="loading">
         <i class="el-icon-loading"></i>
-
     </template>
     <template v-else-if="list.length === 0">
-        无
+        <div class="history">没有历史记录</div>
     </template>
     <template v-else>
+        <!--eslint-disable-->
         <ul >
             <li class="ohh" @click="$router.push(`/post/${item.pId}`)" v-for="item in list">
                 <div class="title">{{item.title}}</div>
@@ -16,39 +15,38 @@
             </li>
         </ul>
     </template>
-
 </template>
 
 <script>
     import axios from 'axios'
-    import {dateFormat} from '@/global/clazz.js'
+    import {dateFormat} from "../../../global/clazz";
+
     export default {
-        name: "Faving",
+        name: "History",
         data(){
             return {
-                list:[],
                 loading: true,
-
+                list:[]
             }
         },
         mounted() {
-            this.getList();
+            this.getList()
         },
         methods:{
             getList(){
                 this.loading = true;
-                axios.get(`/fav/user/${this.uid}`)
-                .then(
-                    data=>{
-                        if(data.data.errno === 0){
-                            this.list = data.data.extend.fav;
-                            this.loading = false
+                axios.get(`history/post?uid=${this.uid}`)
+                    .then(
+                        data=>{
+                            if(data.data.errno === 0){
+                                this.list = data.data.extend;
+                                this.loading = false;
+                            }
                         }
-                    }
-                )
+                    )
             },
             getTime(time){
-                return dateFormat('YYYY-mm-dd HH:MM:SS',time);
+                return dateFormat("YYYY-mm-dd HH:MM:SS",time);
             }
         },
         computed:{

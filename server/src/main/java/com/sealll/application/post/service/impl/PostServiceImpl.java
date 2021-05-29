@@ -112,7 +112,7 @@ public class PostServiceImpl implements PostService {
         PostExample.Criteria criteria = example.createCriteria();
         criteria.andTitleLike("%" + title + "%");
         PageHelper.startPage(pageNum,PageConstants.PAGESIZE);
-        List<Post> list = mapper.getPostTerminalByExample(example);
+        List<Post> list = mapper.getPostWithAuthorByExample(example);
         return list;
     }
 
@@ -135,7 +135,7 @@ public class PostServiceImpl implements PostService {
 //        criteria.andTitleLike("%" + title + "%");
         criteria.andUidEqualTo(uid);
         PageHelper.startPage(pageNum,PageConstants.PAGESIZE);
-        List<Post> list = mapper.getPostTerminalByExample(example);
+        List<Post> list = mapper.getPlainPostByExample(example);
         return list;
     }
 

@@ -4,6 +4,7 @@
         <el-col :span="2"></el-col>
         <el-col :span="18">
             <img class="image" src="@/assets/bgc2.png"/>
+            <div class="username2" v-if="!mySelf"><subbutton :uid="uid"></subbutton></div>
             <div class="username">{{userinfo.username}}</div>
             <user-span :info="userinfo"></user-span>
         </el-col>
@@ -16,10 +17,12 @@
     import {UserInfo} from "../../global/clazz";
     import axios from "axios";
     import UserSpan from "./UserSpan";
+    import Subbutton from "../sub/subbutton";
 
     export default {
         name: "Personal",
-        components: {UserSpan},
+        // eslint-disable-next-line vue/no-unused-components
+        components: {Subbutton, UserSpan},
         methods:{
             getUserInfo(){
                 axios.get(`/userinfo/${this.$attrs.uid}`).then(data => {
@@ -40,8 +43,22 @@
                 );
             }
         },
+        watch:{
+            uid(){
+                this.$router.go(0);
+            }
+        },
+        computed:{
+            uid(){
+                return this.$attrs.uid;
+            },
+            mySelf(){
+                return this.uid === this.$store.state.user.uid
+            }
+        },
         mounted() {
             this.getUserInfo();
+
         },
         data(){
             return {
@@ -64,5 +81,19 @@
         color: white;
         font-size: 40px;
         font-weight: bold;
+    }
+    .username2{
+        position: absolute;
+        left: 10%;
+        top: 78px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+    }
+    .sub{
+        display: inline-block;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        height: 20px;
     }
 </style>

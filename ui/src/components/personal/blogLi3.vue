@@ -18,7 +18,7 @@
         methods: {
 
             getTime(date) {
-                return dateFormat("YYYY-mm-dd HH:MM", date);
+                return dateFormat("YYYY-mm-dd HH:MM:SS", date);
             }
         }
     }
