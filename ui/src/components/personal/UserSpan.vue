@@ -31,6 +31,11 @@
         compnents:{
             MyArticle
         },
+        watch:{
+            tab(){
+                this.$router.go(0);
+            }
+        },
         mounted(){
             if(this.$route.query.tab){
                 this.activeName = this.$route.query.tab;
@@ -56,6 +61,9 @@
             },
             mySelf(){
                 return this.info.uid === this.$store.state.user.uid
+            },
+            tab(){
+                return this.$route.query.tab;
             }
         }
     }

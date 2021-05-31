@@ -11,6 +11,7 @@ import article from '../components/post/singlepost/Article2'
 import Personal from '../components/personal/Personal'
 import SearchResult from '../components/search/SearchResult'
 import indexBody2 from '../components/index/indexBody2'
+import message2 from '../components/message2'
 
 const routes = [
     {
@@ -50,7 +51,8 @@ const routes = [
         }, {name: 'post', path: '/post/:pid', props: true, component: article},
             {name: 'personal',path: '/user/:uid',props: true,component: Personal},
             {name:'search',path:'/search/:title',props:true,component: SearchResult},
-            {name: 'hot', path:'/hot',props: true,component: indexBody2}
+            {name: 'hot', path:'/hot',props: true,component: indexBody2},
+            {name: 'message',path:'/message',component: message2}
             ]
     },
     {name: 'test', path: "/test", component: Test1},

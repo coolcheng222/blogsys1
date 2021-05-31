@@ -1,13 +1,13 @@
 <template>
     <el-row type="flex" class="row-bg" justify="space-around">
         <el-col :span="6">
-            <div class="grid-content bg-purple-light"><label>关注:</label><br><b>{{userinfo.subing}}</b></div>
+            <div @click="$router.push(`/user/${userinfo.uid}?tab=subing`)" class="grid-content bg-purple-light"><label>关注:</label><br><b>{{userinfo.subing}}</b></div>
         </el-col>
         <el-col :span="6">
-            <div class="grid-content bg-purple"><label>粉丝:</label><br><b>{{userinfo.subbed}}</b></div>
+            <div @click="$router.push(`/user/${userinfo.uid}?tab=subing`)" class="grid-content bg-purple"><label>粉丝:</label><br><b>{{userinfo.subbed}}</b></div>
         </el-col>
         <el-col :span="6">
-            <div class="grid-content bg-purple"><label>文章:</label><br><b>{{userinfo.posts}}</b></div>
+            <div @click="$router.push(`/user/${userinfo.uid}`)" class="grid-content bg-purple"><label>文章:</label><br><b>{{userinfo.posts}}</b></div>
         </el-col>
     </el-row>
 </template>

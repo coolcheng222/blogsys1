@@ -34,11 +34,9 @@
         },
         // eslint-disable-next-line no-unused-vars
         beforeRouteEnter(){
-            console.log("fkkkkkku");
         },
         // eslint-disable-next-line no-unused-vars
         beforeRouteLeave (to, from) {
-            console.log("fku")
         }
     }
 </script>

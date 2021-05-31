@@ -18,7 +18,7 @@
 <!--                </el-col>-->
 <!--            </el-row>-->
             <div class="items" @click="$router.push(`/user/${userinfo.uid}`)"><i class="el-icon-user"></i> 个人中心</div>
-            <div class="items"><i class="el-icon-chat-round"></i> 未读消息
+            <div class="items" @click="$router.push(`/message`)"><i class="el-icon-chat-round"></i> 未读消息
                 <div class="unread">{{unread}}</div>
             </div>
             <div class="items" @click="toWrite"><i class="el-icon-edit"></i> 创作文章</div>
